@@ -1,7 +1,7 @@
 import {Request,Response, NextFunction} from "express";
 
 export function requireAuth(req: Request, res: Response, next: NextFunction){
-	if(req["user"]){
+	if(req.headers.token){
 		next();
 		return;
 	}
