@@ -29,6 +29,8 @@ module.exports = {
 		"quotes": [
 			"error",
 			"double"
-		]
+		],
+		"prefer-const": "off"
+
 	}
 }
