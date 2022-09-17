@@ -5,6 +5,7 @@ import {getRequestContext} from "./requestScopedContextStorage";
 
 export function requireAuth(req: Request, res: Response, next: NextFunction){
 	if(req.headers.authorization && config.env === "test") {
+		getRequestContext().userId = req.headers.authorization;
 		next();
 		return;
 	}

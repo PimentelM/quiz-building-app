@@ -30,7 +30,7 @@ describe("Quiz Controller", () => {
 
 	it("POST /api/quiz - Creates a Quiz and returns permalink", async () => {
 		const response = await supertest(app)
-			.post("/api/quiz")
+			.post("/api/quiz/")
 			.set({ Authorization: "Bearer 123" })
 			.send({
 				title: "Test Quiz",
@@ -38,7 +38,7 @@ describe("Quiz Controller", () => {
 					{
 						text: "Test Question",
 						multipleChoice: false,
-						answers: [
+						possibleAnswers: [
 							{
 								text: "Test Answer",
 								isCorrect: true,
@@ -49,11 +49,11 @@ describe("Quiz Controller", () => {
 			});
 
 		expect(response.status).toBe(200);
-		expect(response.body).toHaveProperty("id");
-		expect(response.body).toHaveProperty("permalinkId");
-		let savedQuiz = await db.Quiz.findById(response.body.id);
+		expect(response.body).toHaveProperty("_id");
+		expect(response.body).toHaveProperty("permaLinkId");
+		let savedQuiz = await db.Quiz.findById(response.body._id);
 		expect(savedQuiz).toBeTruthy();
-		expect(savedQuiz?.permaLinkId).toBe(response.body.permalinkId);
+		expect(savedQuiz?.permaLinkId).toBe(response.body.permaLinkId);
 		expect(savedQuiz?.title).toBe("Test Quiz");
 		expect(savedQuiz?.questions.length).toBe(1);
 		expect(savedQuiz?.questions[0].text).toBe("Test Question");
@@ -88,8 +88,8 @@ describe("Quiz Controller", () => {
 			.set({ Authorization: "Bearer 123" });
 
 		expect(response.status).toBe(200);
-		expect(response.body).toHaveProperty("id");
-		expect(response.body).toHaveProperty("permalinkId");
+		expect(response.body).toHaveProperty("_id");
+		expect(response.body).toHaveProperty("permaLinkId");
 		expect(response.body).toHaveProperty("title");
 		expect(response.body).toHaveProperty("questions");
 		expect(response.body.questions[0]).toHaveProperty("title");

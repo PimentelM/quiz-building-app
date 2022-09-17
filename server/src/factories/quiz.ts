@@ -1,5 +1,6 @@
 import {PossibleAnswer, Question, Quiz} from "../models/quiz";
 import {getPermaLinkId, getUniqueId} from "../utils/uniqueIdGenerator";
+import {AppError} from "../utils/applicationErrorClasses";
 
 export interface QuizCreationData {
 	_id?: string,
@@ -18,7 +19,7 @@ export interface QuizCreationData {
 
 export const createQuiz = (quizData: QuizCreationData, ownerId?: string) : Quiz => {
 	if(!ownerId && !quizData.ownerId) {
-		throw new Error("Owner ID is required");
+		throw new AppError("Owner ID is required");
 	}
 
 	let questions : Question[] = [];
