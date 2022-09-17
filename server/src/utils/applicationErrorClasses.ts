@@ -9,6 +9,16 @@ export class InvalidInputError extends Error {
 	}
 }
 
+export class NotFoundError extends Error {
+	public readonly name = "NotFoundError";
+	public readonly __isApplicationError = true;
+	public readonly httpStatuscode: number = 404;
+
+	constructor(message: string) {
+		super(message);
+	}
+}
+
 export class AppError extends Error {
 	public readonly name = "AppError";
 	public readonly __isApplicationError = true;

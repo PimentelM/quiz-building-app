@@ -4,8 +4,12 @@ import {db, initDatabase} from "../../database";
 import supertest from "supertest";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import * as mongoose from "mongoose";
+import {getValidAuthToken, getValidQuizCreationData} from "../stubs";
 
 describe("Quiz Controller", () => {
+	let headers = {
+		Authorization: getValidAuthToken("123")
+	};
 	let app: express.Application;
 	let dbServer;
 	beforeAll(async () => {
@@ -29,74 +33,136 @@ describe("Quiz Controller", () => {
 	});
 
 	it("POST /api/quiz - Creates a Quiz and returns permalink", async () => {
+		let quizCreationData = getValidQuizCreationData();
 		const response = await supertest(app)
 			.post("/api/quiz/")
-			.set({ Authorization: "Bearer 123" })
-			.send({
-				title: "Test Quiz",
-				questions: [
-					{
-						text: "Test Question",
-						multipleChoice: false,
-						possibleAnswers: [
-							{
-								text: "Test Answer",
-								isCorrect: true,
-							},
-						],
-					},
-				],
-			});
+			.set(headers)
+			.send(quizCreationData);
 
-		expect(response.status).toBe(200);
-		expect(response.body).toHaveProperty("_id");
-		expect(response.body).toHaveProperty("permaLinkId");
-		let savedQuiz = await db.Quiz.findById(response.body._id);
+		expect(response.status).toBe(201);
+		let savedQuiz = (await db.Quiz.findById(response.body._id))?.toObject();
 		expect(savedQuiz).toBeTruthy();
-		expect(savedQuiz?.permaLinkId).toBe(response.body.permaLinkId);
-		expect(savedQuiz?.title).toBe("Test Quiz");
-		expect(savedQuiz?.questions.length).toBe(1);
-		expect(savedQuiz?.questions[0].text).toBe("Test Question");
-		expect(savedQuiz?.questions[0].multipleChoice).toBe(false);
-		expect(savedQuiz?.questions[0].possibleAnswers.length).toBe(1);
-		expect(savedQuiz?.questions[0].possibleAnswers[0].text).toBe("Test Answer");
-		expect(savedQuiz?.questions[0].possibleAnswers[0].isCorrect).toBe(true);
+		expect(savedQuiz).toMatchObject({
+			_id: expect.anything(),
+			ownerId: "123",
+			permaLinkId: expect.any(String),
+			...quizCreationData,
+		});
+
 
 	});
 
 	it("GET /api/quiz/by-permalink-id/:permalinkId - Returns quiz with given permalink", async () => {
-		const quiz = await db.Quiz.create({
-			title: "Test Quiz",
-			permaLinkId: "123456",
-			ownerId: "123",
-			questions: [
-				{
-					text: "Test Question",
-					multipleChoice: false,
-					answers: [
-						{
-							text: "Test Answer",
-							isCorrect: true,
-						},
-					],
-				},
-			],
-		});
+		let quizCreationData = getValidQuizCreationData({ownerId: "123", permaLinkId: "123456"})
+		const quiz = await db.Quiz.create(quizCreationData);
 
 		const response = await supertest(app)
 			.get(`/api/quiz/by-permalink-id/${quiz.permaLinkId}`)
-			.set({ Authorization: "Bearer 123" });
 
 		expect(response.status).toBe(200);
-		expect(response.body).toHaveProperty("_id");
-		expect(response.body).toHaveProperty("permaLinkId");
-		expect(response.body).toHaveProperty("title");
-		expect(response.body).toHaveProperty("questions");
-		expect(response.body.questions[0]).toHaveProperty("title");
-		expect(response.body.questions[0]).toHaveProperty("multipleChoice");
-		expect(response.body.questions[0]).toHaveProperty("answers");
-		expect(response.body.questions[0].answers[0]).toHaveProperty("title");
-		expect(response.body.questions[0].answers[0]).toHaveProperty("isCorrect");
+		expect(response.body).toMatchObject({
+			_id: expect.any(String),
+			...quizCreationData
+		});
+
 	});
+
+	it("GET /api/quiz/:id - Returns quiz with given id", async () => {
+		let quizCreationData = getValidQuizCreationData({ownerId: "123", permaLinkId: "123456"})
+		const quiz = await db.Quiz.create(quizCreationData);
+
+		const response = await supertest(app)
+			.get(`/api/quiz/${quiz._id}`)
+
+		expect(response.status).toBe(200);
+		expect(response.body).toMatchObject({
+			_id: expect.any(String),
+			...quizCreationData
+		});
+
+	})
+
+	it("GET /api/quiz - Returns all quizzes of currently logged-in user", async () => {
+		let quizCreationData1 = getValidQuizCreationData({ownerId: "123", permaLinkId: "111222"})
+		let quizCreationData2 = getValidQuizCreationData({ownerId: "123", permaLinkId: "222333"})
+		let quizCreationData3 = getValidQuizCreationData({ownerId: "999", permaLinkId: "444555"})
+		await db.Quiz.create(quizCreationData1);
+		await db.Quiz.create(quizCreationData2);
+		await db.Quiz.create(quizCreationData3);
+
+		const response = await supertest(app)
+			.get("/api/quiz")
+			.set(headers);
+
+		expect(response.status).toBe(200);
+		expect(response.body).toHaveLength(2);
+		expect(response.body).toContainEqual(expect.objectContaining({
+			_id: expect.any(String),
+			...quizCreationData1
+		}))
+		expect(response.body).toContainEqual(expect.objectContaining({
+			_id: expect.any(String),
+			...quizCreationData2
+		}));
+	})
+
+	it("DELETE /api/quiz/:id - Deletes quiz with given id and returns it's data", async () => {
+		let quizCreationData = getValidQuizCreationData({ownerId: "123", permaLinkId: "123456"})
+		const quiz = await db.Quiz.create(quizCreationData);
+
+		const response = await supertest(app)
+			.delete(`/api/quiz/${quiz._id}`)
+			.set(headers);
+
+		expect(response.status).toBe(200);
+		expect(await db.Quiz.findById(quiz._id)).toBeNull();
+		expect(response.body).toMatchObject({
+			_id: expect.any(String),
+			...quizCreationData
+		});
+
+
+	});
+	
+	it("POST /api/quiz/:id/compute-score - Should get number of correct answers", async () => {
+		let quizCreationData = getValidQuizCreationData({ownerId: "123", permaLinkId: "123456",
+			questions: [{
+				text: "Is the sky blue?",
+				multipleChoice: false,
+				possibleAnswers: [
+					{text: "Yes", isCorrect: true},
+					{text: "No", isCorrect: false}]},
+			{
+				text: "Select letters",
+				multipleChoice: true,
+				possibleAnswers: [
+					{text: "A", isCorrect: true},
+					{text: "B", isCorrect: true},
+					{text: "9", isCorrect: false}]
+			},{
+				text: "Second letter of the alphabet",
+				multipleChoice: false,
+				possibleAnswers: [
+					{text: "A", isCorrect: false},
+					{text: "B", isCorrect: true},
+					{text: "Z", isCorrect: false},
+					{text: "K", isCorrect: false},
+					{text: "Y", isCorrect: false}]
+			}]
+		})
+		const quiz = await db.Quiz.create(quizCreationData);
+
+		const response = await supertest(app)
+			.post(`/api/quiz/${quiz._id}/compute-score`)
+			.send({
+				answers: [[true, false], [true, true, false], [true,false, false, false,false]]
+			});
+
+		expect(response.status).toBe(200);
+		expect(response.body).toEqual({
+			score: 2
+		});
+	});
+	
 
 });

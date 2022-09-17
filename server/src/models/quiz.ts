@@ -69,15 +69,16 @@ export class Quiz {
 		}
 	}
 
-	public checkIsCorrect(answers: AnswerSignature[]): boolean {
+	public calculateScore(answers: AnswerSignature[]): number {
 		if (answers.length !== this.questions.length) {
-			return false
+			throw new InvalidInputError("Number of answers does not match number of questions")
 		}
+		let score = 0;
 		for (let i = 0; i < this.questions.length; i++) {
-			if (!this.questions[i].isAnswerCorrect(answers[i])) {
-				return false
+			if (this.questions[i].isAnswerCorrect(answers[i])) {
+				score++;
 			}
 		}
-		return true;
+		return score;
 	}
 }

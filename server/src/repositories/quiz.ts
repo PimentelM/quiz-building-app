@@ -6,8 +6,9 @@ import {Injectable} from "../utils/architecturalDecorators";
 interface IQuizRepository {
 	getQuizById(id: string): Promise<Quiz | null>
 	getQuizByPermaLinkId(permaLinkId: string): Promise<Quiz | null>
-	deleteQuizById(id: string): Promise<void>
+	findAndDeleteQuizById(id: string): Promise<Quiz | null>
 	saveQuiz(quiz: Quiz): Promise<void>
+	listQuizes(ownerId: string): Promise<Quiz[]>
 }
 
 @Injectable()
@@ -32,11 +33,23 @@ export class QuizRepository implements IQuizRepository {
 		return createQuiz(result.toObject());
 	}
 
-	async deleteQuizById(id: string): Promise<void> {
-		await db.Quiz.deleteOne({id});
+	async findAndDeleteQuizById(id: string): Promise<Quiz | null> {
+		let result = await db.Quiz.findByIdAndDelete(id);
+
+		let quiz = result ? createQuiz(result.toObject()) : null;
+
+		return quiz;
 	}
 
 	async saveQuiz(quiz: Quiz): Promise<void> {
 		await db.Quiz.create(quiz);
+	}
+
+	async listQuizes(ownerId: string): Promise<Quiz[]> {
+		let results = await db.Quiz.find({ownerId});
+
+		let quizes = results.map((result) => createQuiz(result.toObject()));
+
+		return quizes;
 	}
 }

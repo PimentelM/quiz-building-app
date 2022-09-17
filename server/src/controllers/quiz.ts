@@ -3,6 +3,9 @@ import {requireAuth} from "../middlewares/authenticate";
 import {Response} from "express";
 import {getRequestContext} from "../middlewares/requestScopedContextStorage";
 import {QuizService} from "../services/quizService";
+import {validateAnswers} from "../schema-validators/computeScore";
+import {AppError} from "../utils/applicationErrorClasses";
+import {validateQuizCreationData} from "../schema-validators/createQuiz";
 
 
 @Controller("/quiz")
@@ -16,34 +19,47 @@ export class QuizController {
 	@Post("/", requireAuth)
 	async create(req,res : Response) {
 		let userId = getRequestContext().userId
+		if(!userId) throw new AppError("User must be authenticated to create a quiz");
 
-		let quiz = await this.quizService.createQuiz(req.body, userId!);
+		let quizData = validateQuizCreationData(req.body);
 
-		res.send(quiz);
+		let quiz = await this.quizService.createQuiz(quizData, userId);
+
+		res.status(201).send(quiz);
 	}
 
 	@Get("/:id")
 	async getById(req,res) {
-		res.send("getById");
+		let quiz = await this.quizService.getQuizById(req.params.id);
+		res.send(quiz);
 	}
 
 	@Get("/by-permalink-id/:id")
 	async getByPermalinkId(req,res) {
-		res.send("getByPermalinkId");
+		let quiz = await this.quizService.getQuizByPermaLinkId(req.params.id);
+		res.send(quiz);
 	}
 
 	@Get("/", requireAuth)
 	async getAll(req,res) {
-		res.send("getAll");
+		let userId = getRequestContext().userId
+		if(!userId) throw new AppError("User must be authenticated to get all quizzes");
+		let quizzes = await this.quizService.listQuizes(userId);
+
+		res.send(quizzes);
 	}
 
 	@Delete("/:id", requireAuth)
 	async deleteById(req,res) {
-		res.send("deleteById");
+		let quiz = await this.quizService.findAndDeleteQuizById(req.params.id);
+		res.send(quiz);
 	}
 
-	@Post("/:id/compute-results")
-	async computeResults(req,res) {
-		res.send("computeResults");
+	@Post("/:id/compute-score")
+	async computeScore(req, res) {
+		let answers = validateAnswers(req.body.answers);
+
+		let score = await this.quizService.computeQuizScore(req.params.id, answers);
+		res.send({score});
 	}
 }
