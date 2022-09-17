@@ -17,6 +17,7 @@ interface Config {
 	databaseConnectionString: string;
 	auth: AuthConfig
 	jwtSecret: string;
+	frontendUrl: string;
 }
 
 export const config: Config = {
@@ -29,6 +30,7 @@ export const config: Config = {
 		audience: process.env.AUTH0_AUDIENCE || "",
 	},
 	jwtSecret: process.env.JWT_SECRET || "",
+	frontendUrl: process.env.FRONTEND_URL || ""
 
 }
 
