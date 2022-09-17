@@ -2,8 +2,6 @@ import {InvalidInputError} from "../utils/applicationErrorClasses";
 
 export type AnswerSignature = boolean[]
 
-export type PossibleAnswers = PossibleAnswer[]
-
 export class PossibleAnswer {
 	constructor(
 		public readonly text: string,
@@ -15,9 +13,9 @@ export class PossibleAnswer {
 export class Question {
 	public readonly text: string
 	public readonly multipleChoice: boolean
-	public readonly possibleAnswers: PossibleAnswers
+	public readonly possibleAnswers: ReadonlyArray<PossibleAnswer>
 
-	constructor(text: string, multiple: boolean, possibleAnswers: PossibleAnswers) {
+	constructor(text: string, multiple: boolean, possibleAnswers: PossibleAnswer[]) {
 		this.multipleChoice = multiple;
 		this.text = text
 		this.possibleAnswers = possibleAnswers
@@ -48,24 +46,25 @@ export class Question {
 }
 
 export class Quiz {
-	public readonly id: string
+	public readonly _id: string
 	public readonly permaLinkId: string
 	public readonly title: string
 	public readonly questions: ReadonlyArray<Question>
 	public readonly ownerId: string
 
-	constructor(ownerId: string,id: string, permaLinkId: string, title: string, questions: Question[]) {
+
+	constructor(ownerId: string,id: string, permaLinkId: string, title: string, questions?: Question[]) {
 		this.ownerId = ownerId;
-		this.id = id
+		this._id = id
 		this.permaLinkId = permaLinkId
 		this.title = title
-		this.questions = questions;
+		this.questions = questions ?? [];
 
 		if (!/^[a-zA-Z0-9]{6}$/.test(permaLinkId)) {
 			throw new InvalidInputError("Permalink should be a string containing 6 alphanumeric characters")
 		}
 
-		if (questions.length > 10) {
+		if (this.questions.length > 10) {
 			throw new InvalidInputError("Quiz cannot have more than 10 questions")
 		}
 	}

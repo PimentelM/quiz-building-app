@@ -30,7 +30,7 @@ module.exports = {
 			"error",
 			"double"
 		],
-		"prefer-const": "off"
+		"prefer-const": "off",
 
 	}
 }

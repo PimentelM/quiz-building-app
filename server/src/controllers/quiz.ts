@@ -1,18 +1,25 @@
 import {Controller, Delete, Get, Post} from "../utils/controllerDecorators";
 import {requireAuth} from "../middlewares/authenticate";
 import {Response} from "express";
+import {getRequestContext} from "../middlewares/requestScopedContextStorage";
+import {QuizService} from "../services/quizService";
 
 
 @Controller("/quiz")
 export class QuizController {
 
+	constructor(
+		private quizService: QuizService
+	) {
+	}
+
 	@Post("/", requireAuth)
 	async create(req,res : Response) {
-		res.send({
-			_id: "teste",
-			permalinkId: "teste"}
-		);
-		//res.send("create");
+		let userId = getRequestContext().userId
+
+		let quiz = await this.quizService.createQuiz(req.body, userId!);
+
+		res.send(quiz);
 	}
 
 	@Get("/:id")

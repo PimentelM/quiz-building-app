@@ -31,6 +31,7 @@ export class AuthService {
 
 		// Create token
 		let payload = {
+			id: user._id,
 			email: user.email
 		};
 
@@ -42,6 +43,12 @@ export class AuthService {
 	public async register(email: string, password: string) {
 		if(!email || !password) {
 			throw new InvalidInputError("Email and password must be provided")
+		}
+
+		// Test email format using regex
+		let emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+		if(!emailRegex.test(email)) {
+			throw new InvalidInputError("Email is invalid");
 		}
 
 		email = email.toLowerCase();
@@ -61,6 +68,8 @@ export class AuthService {
 		let user = await db.User.create({
 			email, password: hashedPassword, isInactive: false
 		});
+
+		delete (user as any).password
 
 		return user;
 

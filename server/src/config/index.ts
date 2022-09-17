@@ -33,8 +33,10 @@ export const config: Config = {
 }
 
 export function validateConfig(){
-	if(!config.databaseConnectionString) throw new Error("DATABASE_CONNECTION_STRING not specified.")
-	if(!config.jwtSecret) throw new Error("JWT_SECRET not specified.")
+	if(config.env !== NodeEnv.TEST) {
+		if(!config.databaseConnectionString) throw new Error("DATABASE_CONNECTION_STRING not specified.")
+		if(!config.jwtSecret) throw new Error("JWT_SECRET not specified.")
+	}
 }
 
 
