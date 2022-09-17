@@ -52,8 +52,10 @@ export class Quiz {
 	public readonly permaLinkId: string
 	public readonly title: string
 	public readonly questions: ReadonlyArray<Question>
+	public readonly ownerId: string
 
-	constructor(id: string, permaLinkId: string, title: string, questions: Question[]) {
+	constructor(ownerId: string,id: string, permaLinkId: string, title: string, questions: Question[]) {
+		this.ownerId = ownerId;
 		this.id = id
 		this.permaLinkId = permaLinkId
 		this.title = title

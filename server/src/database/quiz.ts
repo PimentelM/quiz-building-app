@@ -2,6 +2,7 @@ import {Schema, model} from "mongoose";
 
 
 const schema = new Schema({
+	ownerId: {type: String, required: true, index: true},
 	permaLinkId: {type: String, required: true, unique: true, index: true},
 	title: {type: String, required: true},
 	questions: [{
