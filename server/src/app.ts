@@ -5,6 +5,7 @@ import cors from "cors";
 import helmet from "helmet";
 import router from "./utils/controllerRouter"
 import {getErrorHandlingMiddleware} from "./middlewares/errorHandler";
+import {requestScopedContextMiddleware} from "./utils/requestScopedContextStorage";
 
 export function getApp(){
 	const app = express();
@@ -13,6 +14,9 @@ export function getApp(){
 	app.use(cors());
 	app.use(helmet());
 	app.use(appLogger);
+
+	// Request scoped context storage middleware
+	app.use(requestScopedContextMiddleware);
 
 
 	// Add Auth0 middleware here
