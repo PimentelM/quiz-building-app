@@ -44,21 +44,35 @@ export class QuizService {
 		return score;
 	}
 
-	public async getQuizById(id: string) {
+	public async getPublicQuizById(id: string) {
 		let quiz = await this.quizRepository.getQuizById(id);
 
 		if(!quiz) {
 			throw new NotFoundError("Quiz not found");
 		}
 
+		// Remove data that should not be public
+		for(let question of quiz.questions){
+			for(let possibleAnswer of question.possibleAnswers){
+				delete (possibleAnswer as any).isCorrect
+			}
+		}
+
 		return quiz;
 	}
 
-	public async getQuizByPermaLinkId(permaLinkId: string) {
+	public async getPublicQuizByPermaLinkId(permaLinkId: string) {
 		let quiz = await this.quizRepository.getQuizByPermaLinkId(permaLinkId);
 
 		if(!quiz) {
 			throw new NotFoundError("Quiz not found");
+		}
+
+		// Remove data that should not be public
+		for(let question of quiz.questions){
+			for(let possibleAnswer of question.possibleAnswers){
+				delete (possibleAnswer as any).isCorrect
+			}
 		}
 
 		return quiz;

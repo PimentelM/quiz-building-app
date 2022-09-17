@@ -52,7 +52,7 @@ describe("Quiz Controller", () => {
 
 	});
 
-	it("GET /api/quiz/by-permalink-id/:permalinkId - Returns quiz with given permalink", async () => {
+	it("GET /api/quiz/by-permalink-id/:permalinkId - Returns quiz with given permalink, don't reveal correct answers", async () => {
 		let quizCreationData = getValidQuizCreationData({ownerId: "123", permaLinkId: "123456"})
 		const quiz = await db.Quiz.create(quizCreationData);
 
@@ -62,12 +62,18 @@ describe("Quiz Controller", () => {
 		expect(response.status).toBe(200);
 		expect(response.body).toMatchObject({
 			_id: expect.any(String),
-			...quizCreationData
+			permaLinkId: expect.any(String),
+			ownerId: expect.any(String),
+			questions: expect.any(Array),
 		});
+		expect(response.body.questions).toBeDefined()
+		expect(response.body.questions[0].possibleAnswers).toBeDefined()
+		expect(response.body.questions[0].possibleAnswers[0].isCorrect).toBeUndefined();
+		expect(response.body.questions[0].possibleAnswers[1].isCorrect).toBeUndefined();
 
 	});
 
-	it("GET /api/quiz/:id - Returns quiz with given id", async () => {
+	it("GET /api/quiz/:id - Returns quiz with given id, don't reveal correct answers", async () => {
 		let quizCreationData = getValidQuizCreationData({ownerId: "123", permaLinkId: "123456"})
 		const quiz = await db.Quiz.create(quizCreationData);
 
@@ -77,8 +83,14 @@ describe("Quiz Controller", () => {
 		expect(response.status).toBe(200);
 		expect(response.body).toMatchObject({
 			_id: expect.any(String),
-			...quizCreationData
+			permaLinkId: expect.any(String),
+			ownerId: expect.any(String),
+			questions: expect.any(Array),
 		});
+		expect(response.body.questions).toBeDefined()
+		expect(response.body.questions[0].possibleAnswers).toBeDefined()
+		expect(response.body.questions[0].possibleAnswers[0].isCorrect).toBeUndefined();
+		expect(response.body.questions[0].possibleAnswers[1].isCorrect).toBeUndefined();
 
 	})
 

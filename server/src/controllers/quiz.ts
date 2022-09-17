@@ -30,13 +30,13 @@ export class QuizController {
 
 	@Get("/:id")
 	async getById(req,res) {
-		let quiz = await this.quizService.getQuizById(req.params.id);
+		let quiz = await this.quizService.getPublicQuizById(req.params.id);
 		res.send(quiz);
 	}
 
 	@Get("/by-permalink-id/:id")
 	async getByPermalinkId(req,res) {
-		let quiz = await this.quizService.getQuizByPermaLinkId(req.params.id);
+		let quiz = await this.quizService.getPublicQuizByPermaLinkId(req.params.id);
 		res.send(quiz);
 	}
 
