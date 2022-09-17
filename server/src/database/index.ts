@@ -1,4 +1,5 @@
 import Quiz from "./quiz";
+import User from "./user";
 import { connect } from "mongoose";
 import {config} from "../config";
 
@@ -11,4 +12,5 @@ export async function initDatabase(connectionString?: string) {
 
 export const db = {
 	Quiz,
+	User
 }

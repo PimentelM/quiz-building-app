@@ -15,6 +15,7 @@ const getAsyncLocalStorage = () : AsyncLocalStorage<RequestContextStore> => {
 }
 
 export interface RequestContextStore {
+	userId?: string
 	[key: string]: any
 }
 

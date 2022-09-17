@@ -10,12 +10,16 @@ export class AuthenticationController {
 
 	@Post("/login")
 	public async login(req,res) {
-		res.send(await this.authService.login(req.body.email, req.body.password));
+		let token = await this.authService.login(req.body.email, req.body.password);
+		res.send({
+			token
+		});
 	}
 
 	@Post("/register")
-	public register(req,res) {
-		res.send("register");
+	public async register(req,res) {
+		let user = await this.authService.register(req.body.email, req.body.password);
+		res.send(user);
 	}
 
 

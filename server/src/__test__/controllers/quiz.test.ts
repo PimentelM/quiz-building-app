@@ -3,17 +3,29 @@ import {getApp} from "../../app";
 import {db, initDatabase} from "../../database";
 import supertest from "supertest";
 import {MongoMemoryServer} from "mongodb-memory-server";
+import * as mongoose from "mongoose";
 
 describe("Quiz Controller", () => {
 	let app: express.Application;
-
+	let dbServer;
 	beforeAll(async () => {
 		// Start mongodb in-memory server
-		const uri = (await MongoMemoryServer.create()).getUri("testdb");
+		dbServer = await MongoMemoryServer.create()
+		const uri = dbServer.getUri("testdb");
 		// Connect to the in-memory database
 		await initDatabase(uri);
 
 		app = getApp();
+	});
+
+	beforeEach(async () => {
+		// Clear all data
+		await db.Quiz.deleteMany({});
+	});
+
+	afterAll(async () => {
+		await dbServer.stop();
+		await mongoose.disconnect();
 	});
 
 	it("POST /api/quiz - Creates a Quiz and returns permalink", async () => {
@@ -56,6 +68,7 @@ describe("Quiz Controller", () => {
 		const quiz = await db.Quiz.create({
 			title: "Test Quiz",
 			permaLinkId: "123456",
+			ownerId: "123",
 			questions: [
 				{
 					text: "Test Question",

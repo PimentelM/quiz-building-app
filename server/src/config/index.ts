@@ -16,6 +16,7 @@ interface Config {
     port: number;
 	databaseConnectionString: string;
 	auth: AuthConfig
+	jwtSecret: string;
 }
 
 export const config: Config = {
@@ -26,6 +27,15 @@ export const config: Config = {
 		domain: process.env.AUTH0_DOMAIN || "",
 		clientId: process.env.AUTH0_CLIENT_ID || "",
 		audience: process.env.AUTH0_AUDIENCE || "",
-	}
+	},
+	jwtSecret: process.env.JWT_SECRET || "",
 
 }
+
+export function validateConfig(){
+	if(!config.databaseConnectionString) throw new Error("DATABASE_CONNECTION_STRING not specified.")
+	if(!config.jwtSecret) throw new Error("JWT_SECRET not specified.")
+}
+
+
+validateConfig();
