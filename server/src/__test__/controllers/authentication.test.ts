@@ -24,6 +24,20 @@ function getValidUser(overwrites = {}) {
 	}
 }
 
+function getActivationToken(email: string) {
+	return jwt.sign({email, type: "activateUser"}, config.jwtSecret, {expiresIn: "1h"});
+}
+
+function getPasswordResetToken(email: string) {
+	return jwt.sign({email, type: "resetPassword"}, config.jwtSecret, {expiresIn: "1h"});
+}
+
+function getInvalidPasswordResetToken(email: string) {
+	return jwt.sign({email, type: "resetPassword"}, "invalidSecret", {expiresIn: "1h"});
+}
+
+
+
 describe("Authentication Controller", () => {
 	let app: express.Application;
 	let dbServer;
@@ -66,7 +80,7 @@ describe("Authentication Controller", () => {
 
 		// Check that email was sent
 		expect(mockMailService.sendSimpleMail).toBeCalledTimes(1);
-		expect(mockMailService.sendSimpleMail).toBeCalledWith("test@test.com", expect.any(String), expect.any(String));
+		expect(mockMailService.sendSimpleMail).toBeCalledWith("test@test.com", expect.any(String), expect.stringMatching(/.*link.*http.*token.*/i));
 
 		// Check that user was created
 		let user = await db.User.findOne({email: "test@test.com"});
@@ -98,9 +112,9 @@ describe("Authentication Controller", () => {
 		expect(response.body?.token).toBeFalsy();
 	})
 
-	it("POST /api/auth/activate-account", async () => {
+	it("POST /api/auth/activate-account should activate account", async () => {
 		await db.User.create(getValidUser({isInactive: true}));
-		let token = jwt.sign({email: "test@test.com", type: "activateUser"}, config.jwtSecret, {expiresIn: "1h"});
+		let token = getActivationToken("test@test.com");
 
 		const response = await supertest(app).post("/api/auth/activate-account").send({token});
 
@@ -109,6 +123,43 @@ describe("Authentication Controller", () => {
 		// Check if user is active
 		let user = await db.User.findOne({email: "test@test.com"});
 		expect(user?.isInactive).toBe(false);
+	});
+
+	it("POST /api/auth/activate-account should not activate user if token is invalid", async () => {
+		await db.User.create(getValidUser({isInactive: true}));
+		let token = getActivationToken("another@email.com")
+
+		const response = await supertest(app).post("/api/auth/activate-account").send({token});
+
+		expect(response.status).toBe(400);
+		// Check if user is active
+		let user = await db.User.findOne({email: "test@test.com"});
+		expect(user?.isInactive).toBe(true);
+	})
+
+	it("POST /api/auth/reset-password should change user password", async () => {
+		let beforeUser = await db.User.create(getValidUser());
+		let token = getPasswordResetToken("test@test.com");
+
+		const response = await supertest(app).post("/api/auth/reset-password").send({token, password: "newPassword"});
+
+		expect(response.status).toBe(200);
+		expect(response.body?.message).toMatch(/.*password successfully (changed|set).*/i);
+		// Check if user password was changed
+		let afterUser = await db.User.findOne({email: "test@test.com"});
+		expect(afterUser?.password).not.toBe(beforeUser?.password);
+
+	});
+
+	it.each([getPasswordResetToken("another@email.com"), getInvalidPasswordResetToken("test@test.com")])("POST /api/auth/reset-password should not change user password if token is invalid", async (token) => {
+		let beforeUser = await db.User.create(getValidUser());
+		const response = await supertest(app).post("/api/auth/reset-password").send({token, password: "newPassword"});
+
+		expect(response.status).toBe(400);
+
+		// Check if user password was changed
+		let afterUser = await db.User.findOne({email: "test@test.com"});
+		expect(afterUser?.password).toBe(beforeUser?.password);
 	});
 
 
