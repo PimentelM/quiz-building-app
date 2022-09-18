@@ -3,7 +3,7 @@ import {Outlet, ReactLocation, Router} from "@tanstack/react-location";
 import {ReactLocationDevtools} from "@tanstack/react-location-devtools";
 import MainLayout from "./presentation/layouts/MainLayout";
 import {Home} from "./presentation/pages/Home";
-import {LoginPage, RegisterPage} from "./presentation/pages/AuthPages";
+import {LoginPage, RegisterPage} from "./presentation/pages/auth/login/view";
 import {Quiz} from "./presentation/pages/Quiz";
 import {QuizBuilder} from "./presentation/pages/QuizBuilder";
 import {ProvideAuth} from "./hooks/useAuth";

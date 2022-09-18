@@ -2,7 +2,7 @@ import React, {useState, useContext, createContext, useEffect} from "react";
 
 interface AuthContextProps {
 	token: string;
-	storeToken: (token: string) => void;
+	storeToken: (token: string, remember : boolean) => void;
 	clearToken: () => void;
 	isAuthenticated: boolean;
 }
@@ -26,6 +26,7 @@ function useProvideAuth() {
 
 	let isAuthenticated = !!token;
 
+	// Load stored token from local storage
 	useEffect(() => {
 		const token = localStorage.getItem("token");
 		if (token) {
@@ -33,11 +34,16 @@ function useProvideAuth() {
 		}
 	});
 
-	const storeToken = (newToken: string) => {
+	const storeToken = (newToken: string, remember : boolean | undefined) => {
 		console.log("storeToken", newToken);
-		localStorage.setItem("token", newToken);
+		if(remember){
+			localStorage.setItem("token", newToken);
+		} else {
+			localStorage.removeItem("token");
+		}
 		return setToken(newToken);
 	};
+
 	const clearToken = () => {
 		console.log("clearToken");
 		localStorage.removeItem("token");
@@ -49,6 +55,6 @@ function useProvideAuth() {
 		storeToken,
 		clearToken,
 		token,
-		isAuthenticated
+		isAuthenticated,
 	};
 }

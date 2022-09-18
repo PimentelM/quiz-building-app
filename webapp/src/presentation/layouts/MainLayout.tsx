@@ -31,9 +31,9 @@ function Navbar(){
 	}
 
 	let items = [
+		{to: "/quiz/87TT9y", text: "Quiz"},
 		{to: "/login", text: "Login", hideIfAuth: true},
 		{to: "/register", text: "Register", hideIfAuth: true},
-		{to: "/quiz/87TT9y", text: "Quiz"},
 		{to: "/quiz-builder", text: "New Quiz", reqAuth: true},
 		{to: "/logoff", text: "Logoff", action: logoff, reqAuth: true}
 	]
