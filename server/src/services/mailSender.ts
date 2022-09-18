@@ -1,12 +1,8 @@
-import {Injectable} from "../utils/architecturalDecorators";
+import {ISimpleMailSender} from "./authService";
 
-export interface IMailSenderService {
-	sendMail(to: string, subject: string, text: string): Promise<void>
-}
 
-@Injectable("mailSenderService")
-export class MailSender implements IMailSenderService {
-	async sendMail(to: string, subject: string, text: string): Promise<void> {
+export class MailSender implements ISimpleMailSender {
+	async sendSimpleMail(to: string, subject: string, text: string): Promise<void> {
 		console.log(`Sending mail to ${to}...`);
 		console.log({
 			to,

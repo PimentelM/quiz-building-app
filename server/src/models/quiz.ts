@@ -24,6 +24,10 @@ export class Question {
 			throw new InvalidInputError("A question must have at least 1 possible answer")
 		}
 
+		if(this.possibleAnswers.filter((possibleAnswer) => possibleAnswer.isCorrect).length < 1) {
+			throw new InvalidInputError("A question must have at least 1 correct answer")
+		}
+
 		if (!multiple) {
 			// Checks if there is more than one correct answer
 			const correctAnswers = this.possibleAnswers.map(x=>Number(x.isCorrect)).reduce((a,b)=>a+b,0);

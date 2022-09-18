@@ -31,6 +31,7 @@ module.exports = {
 			"double"
 		],
 		"prefer-const": "off",
+		"@typescript-eslint/no-inferrable-types": "off",
 
 	}
 }

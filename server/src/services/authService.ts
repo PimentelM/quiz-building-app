@@ -4,16 +4,19 @@ import {db} from "../database";
 import {InvalidInputError} from "../utils/applicationErrorClasses";
 import jwt from "jsonwebtoken";
 import {config} from "../config";
-import {IMailSenderService} from "./mailSender";
 import {Inject} from "typedi";
 
 let emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+export interface ISimpleMailSender {
+	sendSimpleMail(to: string, subject: string, text: string): Promise<void>
+}
 
 
 @Injectable()
 export class AuthService {
 
-	constructor(@Inject("mailSenderService") private mailSenderService: IMailSenderService) {
+	constructor(@Inject("mailSenderService") private mailSenderService: ISimpleMailSender) {
 	}
 
 
@@ -71,7 +74,7 @@ export class AuthService {
 
 		delete (user as any).password
 
-		this.sendUserActivationEmail(email);
+		await this.sendUserActivationEmail(email);
 
 		return user;
 
@@ -95,7 +98,7 @@ export class AuthService {
 
 		let emailBody = `Please, access the following link to activate your account: ${config.frontendUrl}/activate-user?token=${token}`;
 
-		await this.mailSenderService.sendMail(
+		await this.mailSenderService.sendSimpleMail(
 			email,
 			"Quiz Builder - Activate your account",
 			emailBody
@@ -142,7 +145,7 @@ export class AuthService {
 
 		let emailBody = `Please, access the following link to reset your password: ${config.frontendUrl}/reset-password?token=${token}`;
 
-		await this.mailSenderService.sendMail(
+		await this.mailSenderService.sendSimpleMail(
 			email,
 			"Quiz Builder - Reset password Link",
 			emailBody

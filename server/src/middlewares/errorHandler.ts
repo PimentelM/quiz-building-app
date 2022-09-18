@@ -1,4 +1,5 @@
 import express from "express";
+import {config} from "../config";
 
 export const getErrorHandlingMiddleware = () => {
 	return (error: Error & any, req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -18,10 +19,20 @@ export const getErrorHandlingMiddleware = () => {
 			errorName = error.name;
 		}
 
-		res.status(statusCode).send({
+		let response = {
 			error: errorName,
 			message,
-		});
+		}
+
+		if(config.env !== "production") {
+			response["_error"] = {
+				message: error.message,
+				stack: error.stack,
+				name: error.name
+			}
+		}
+
+		res.status(statusCode).send(response);
 
 		next(error);
 	};

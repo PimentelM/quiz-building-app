@@ -1,16 +1,16 @@
 import {Injectable} from "../utils/architecturalDecorators";
-import {validateQuizCreationData} from "../schema-validators/createQuiz";
 import {createQuiz, QuizCreationData} from "../factories/quiz";
 import {QuizRepository} from "../repositories/quiz";
 import {AnswerSignature, Quiz} from "../models/quiz";
 import {InvalidInputError, NotFoundError} from "../utils/applicationErrorClasses";
+import {PublicQuiz} from "../dtos/publicQuiz";
 @Injectable()
 export class QuizService {
 
 	constructor(private quizRepository: QuizRepository) {
 	}
 
-	public async createQuiz(quizData: QuizCreationData, ownerId: string) {
+	public async createQuiz(quizData: QuizCreationData, ownerId: string): Promise<Quiz> {
 		if(quizData.permaLinkId) {
 			throw new InvalidInputError("User can't provide the permaLinkId when creating a Quiz")
 		}
@@ -28,7 +28,7 @@ export class QuizService {
 		return quiz;
 	}
 
-	public async listQuizes(ownerId: string) {
+	public async listQuizes(ownerId: string) : Promise<Quiz[]> {
 		return await this.quizRepository.listQuizes(ownerId);
 	}
 
@@ -44,24 +44,18 @@ export class QuizService {
 		return score;
 	}
 
-	public async getPublicQuizById(id: string) {
+	public async getPublicQuizById(id: string) : Promise<PublicQuiz> {
 		let quiz = await this.quizRepository.getQuizById(id);
 
 		if(!quiz) {
 			throw new NotFoundError("Quiz not found");
 		}
 
-		// Remove data that should not be public
-		for(let question of quiz.questions){
-			for(let possibleAnswer of question.possibleAnswers){
-				delete (possibleAnswer as any).isCorrect
-			}
-		}
 
-		return quiz;
+		return new PublicQuiz(quiz);
 	}
 
-	public async getPublicQuizByPermaLinkId(permaLinkId: string) {
+	public async getPublicQuizByPermaLinkId(permaLinkId: string) : Promise<PublicQuiz> {
 		let quiz = await this.quizRepository.getQuizByPermaLinkId(permaLinkId);
 
 		if(!quiz) {
@@ -75,10 +69,10 @@ export class QuizService {
 			}
 		}
 
-		return quiz;
+		return new PublicQuiz(quiz);
 	}
 
-	public async findAndDeleteQuizById(id: string) {
+	public async findAndDeleteQuizById(id: string) : Promise<Quiz> {
 		let quiz = await this.quizRepository.findAndDeleteQuizById(id);
 
 		if(!quiz) {

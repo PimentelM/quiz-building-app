@@ -1,10 +1,15 @@
+import * as dotenv from "dotenv";
+dotenv.config({path: "./.env.test"});
 import express from "express";
 import {getApp} from "../../app";
 import {db, initDatabase} from "../../database";
 import supertest from "supertest";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import * as mongoose from "mongoose";
+import {injectTestDependencies} from "../test-utils";
 import {getValidAuthToken, getValidQuizCreationData} from "../stubs";
+
+injectTestDependencies();
 
 describe("Quiz Controller", () => {
 	let headers = {
