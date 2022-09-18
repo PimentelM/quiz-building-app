@@ -5,6 +5,7 @@ import {InvalidInputError} from "../utils/applicationErrorClasses";
 import jwt from "jsonwebtoken";
 import {config} from "../config";
 import {Inject} from "typedi";
+import {timeout} from "../utils/javascriptUtils";
 
 let emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
@@ -75,9 +76,10 @@ export class AuthService {
 		delete (user as any).password
 
 		// Only throws error after function returns...
-		await this.sendUserActivationEmail(email).catch(err=>{
+		// await for test purposes... /* in a real system we would use pub sub to send the email */
+		await Promise.race([this.sendUserActivationEmail(email).catch(err=>{
 			setTimeout(()=> {throw err}, 0);
-		})
+		}), timeout(100)])
 
 		return user;
 
