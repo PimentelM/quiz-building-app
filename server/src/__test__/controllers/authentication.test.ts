@@ -151,7 +151,8 @@ describe("Authentication Controller", () => {
 
 	});
 
-	it.each([getPasswordResetToken("another@email.com"), getInvalidPasswordResetToken("test@test.com")])("POST /api/auth/reset-password should not change user password if token is invalid", async (token) => {
+	let invalidTokens = [getPasswordResetToken("another@email.com"), getInvalidPasswordResetToken("test@test.com")];
+	it.each(invalidTokens)("POST /api/auth/reset-password should not change user password if token is invalid", async (token) => {
 		let beforeUser = await db.User.create(getValidUser());
 		const response = await supertest(app).post("/api/auth/reset-password").send({token, password: "newPassword"});
 
