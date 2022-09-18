@@ -21,12 +21,16 @@ function handleRequestError(error: AxiosError) {
 
 class Api {
 	private http: AxiosInstance;
-	constructor(private token: string) {
+	constructor(private token?: string) {
+		let headers: any = {};
+		
+		if(token) {
+			headers["Authorization"] = `Bearer ${token}`;
+		}
+
 		this.http = axios.create({
 			baseURL: "http://localhost:8081/api",
-			headers: {
-				Authorization: `Bearer ${token}`,
-			}
+			headers
 		})
 	}
 
@@ -38,9 +42,25 @@ class Api {
 		return response?.data;
 	}
 
+	async login(email: string, password: string) {
+		let response = await this.http.post("/auth/login", {email, password}).catch(
+			handleRequestError
+		);
+
+		return response?.data;
+	}
+
+	async register(email: string, password: string) {
+		let response = await this.http.post("/auth/register", {email, password}).catch(
+			handleRequestError
+		);
+
+		return response?.data;
+	}
 }
 
 export function useApi(){
+
 	const {token} = useAuth()
 
 	const api = useMemo(()=>{

@@ -5,6 +5,8 @@ import MainLayout from "./presentation/layouts/MainLayout";
 import {Home} from "./presentation/pages/Home";
 import {LoginPage, RegisterPage} from "./presentation/pages/AuthPages";
 import {Quiz} from "./presentation/pages/Quiz";
+import {QuizBuilder} from "./presentation/pages/QuizBuilder";
+import {ProvideAuth} from "./hooks/useAuth";
 
 // Set up a ReactLocation SimpleCache instance
 // const routeCache = new ReactLocationSimpleCache();
@@ -20,13 +22,16 @@ function App() {
 				{path: "/", element: <Home/>},
 				{path: "/login", element: <LoginPage/>},
 				{path: "/register", element: <RegisterPage/>},
-				{path: "/quiz/:quizId", element: <Quiz/>}
+				{path: "/quiz/:quizId", element: <Quiz/>},
+				{path: "/quiz-builder", element: <QuizBuilder/>}
 			]}
 		>
-			<MainLayout>
-				<Outlet/> {/* Start rendering router matches */}
-				<ReactLocationDevtools/> {/* enable Devtools */}
-			</MainLayout>
+			<ProvideAuth>
+				<MainLayout>
+					<Outlet/> {/* Start rendering router matches */}
+					<ReactLocationDevtools/> {/* enable Devtools */}
+				</MainLayout>
+			</ProvideAuth>
 		</Router>
 	)
 }
