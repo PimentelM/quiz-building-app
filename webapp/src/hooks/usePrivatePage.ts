@@ -4,12 +4,12 @@ import {useEffect} from "react";
 
 
 export function usePrivatePage(){
-	const {token} = useAuth()
+	const {isAuthenticated} = useAuth()
 
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		if(!token){
+		if(!isAuthenticated){
 			navigate({to: "/login"})
 		}
 	},[])

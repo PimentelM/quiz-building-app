@@ -2,6 +2,24 @@ import {Link, useMatch, useNavigate} from "@tanstack/react-location";
 import {useAuth} from "../../hooks/useAuth";
 
 
+function NavbarItem({to, children, reqAuth, hideIfAuth, action}: any) {
+	let { isAuthenticated } = useAuth()
+
+	if(reqAuth && !isAuthenticated){
+		return null
+	}
+
+	if(hideIfAuth && isAuthenticated){
+		return null
+	}
+
+	return (
+		<Link onClick={action} to={to} className="mr-4 text-xl font-bold">
+			{children}
+		</Link>
+	);
+}
+
 function Navbar(){
 
 	let navigate = useNavigate()
@@ -11,6 +29,14 @@ function Navbar(){
 		clearToken()
 		navigate({to: "/"})
 	}
+
+	let items = [
+		{to: "/login", text: "Login", hideIfAuth: true},
+		{to: "/register", text: "Register", hideIfAuth: true},
+		{to: "/quiz/87TT9y", text: "Quiz"},
+		{to: "/quiz-builder", text: "New Quiz", reqAuth: true},
+		{to: "/logoff", text: "Logoff", action: logoff, reqAuth: true}
+	]
 
 	return (
 		<div className="h-10 w-[100%] bg-gray-200 flex justify-between">
@@ -23,22 +49,17 @@ function Navbar(){
 
 			<div>
 				<div className="flex items-center pt-1">
-					<Link to="/login">
-						<div className="mr-4 text-xl font-bold">Login</div>
-					</Link>
-					<Link to="/register">
-						<div className="mr-4 text-xl font-bold">Register</div>
-					</Link>
-					<Link to="/quiz/87TT9y">
-						<div className="mr-4 text-xl font-bold">Quiz</div>
-					</Link>
-					<Link to="/quiz-builder">
-						<div className="mr-4 text-xl font-bold">Quiz Builder</div>
-					</Link>
-					<div className="mr-4 text-xl font-bold" onClick={logoff}>
-						Logout
-					</div>
-
+					{items.map((item, index) => {
+						return (
+							<NavbarItem key={index}
+										to={item.to}
+										reqAuth={item.reqAuth}
+										hideIfAuth={item.hideIfAuth}
+										action={item.action}>
+								{item.text}
+							</NavbarItem>
+						);
+					})}
 				</div>
 			</div>
 		</div>

@@ -4,6 +4,7 @@ interface AuthContextProps {
 	token: string;
 	storeToken: (token: string) => void;
 	clearToken: () => void;
+	isAuthenticated: boolean;
 }
 
 const authContext = createContext<AuthContextProps>({} as AuthContextProps);
@@ -22,6 +23,8 @@ export const useAuth = () => {
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
 	const [token, setToken] = useState( "");
+
+	let isAuthenticated = !!token;
 
 	useEffect(() => {
 		const token = localStorage.getItem("token");
@@ -46,5 +49,6 @@ function useProvideAuth() {
 		storeToken,
 		clearToken,
 		token,
+		isAuthenticated
 	};
 }
