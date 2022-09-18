@@ -7,6 +7,9 @@ export class PossibleAnswer {
 		public readonly text: string,
 		public readonly isCorrect: boolean,
 	) {
+		if (this.text.length < 1 || this.text.length > 255) {
+			throw new InvalidInputError("Possible answer text must be between 1 and 255 characters long")
+		}
 	}
 }
 
@@ -19,6 +22,10 @@ export class Question {
 		this.multipleChoice = multiple;
 		this.text = text
 		this.possibleAnswers = possibleAnswers
+
+		if(this.text.length < 1 || this.text.length > 1024) {
+			throw new InvalidInputError("Question text must be between 1 and 1024 characters long")
+		}
 
 		if(possibleAnswers.length < 1) {
 			throw new InvalidInputError("A question must have at least 1 possible answer")
@@ -66,6 +73,10 @@ export class Quiz {
 
 		if (!/^[a-zA-Z0-9]{6}$/.test(permaLinkId)) {
 			throw new InvalidInputError("Permalink should be a string containing 6 alphanumeric characters")
+		}
+
+		if(this.title.length < 1 || this.title.length > 255) {
+			throw new InvalidInputError("Title should be between 1 and 255 characters")
 		}
 
 		if (this.questions.length > 10) {

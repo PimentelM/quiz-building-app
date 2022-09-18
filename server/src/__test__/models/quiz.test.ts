@@ -11,6 +11,15 @@ describe("Quiz Models", () => {
 			expect(action).toThrowError();
 		});
 
+		it("Should have at lest one correct answer", () => {
+			let action = () => new Question("1 + 1 = ?", false,[
+				new PossibleAnswer("2", false),
+				new PossibleAnswer("3", false),
+			])
+
+			expect(action).toThrowError();
+		});
+
 	});
 
 
