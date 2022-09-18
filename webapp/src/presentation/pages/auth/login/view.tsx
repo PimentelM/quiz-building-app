@@ -1,14 +1,20 @@
 import {Link, useNavigate} from "@tanstack/react-location"
-import {useLoginForm} from "./viewModel";
+import {useLoginForm, useRegisterForm} from "./viewModel";
 
 function LoginForm() {
-	
+
 	let {error, isLoading, handleSubmit} = useLoginForm()
 
 	return (
 		<form
 			onSubmit={handleSubmit}
 		>
+			<div className={"flex justify-center"}>
+				<div className="pb-4 font-medium">
+					Login
+				</div>
+
+			</div>
 
 			{
 				(error) && (
@@ -117,10 +123,100 @@ export function LoginPage() {
 	)
 }
 
+function RegisterForm() {
+
+	let {error, isLoading, handleSubmit, successMessage} = useRegisterForm()
+
+	if(successMessage) {
+		return (
+			<div className="text-green-400 text-center">
+				{successMessage}
+			</div>
+		)
+	}
+
+	return (
+		<form
+			onSubmit={handleSubmit}
+		>
+			<div className={"flex justify-center"}>
+				<div className="pb-4 font-medium">
+					Register
+				</div>
+
+			</div>
+
+
+			{
+				(error) && (
+					<div className="text-red-400">
+						{error}
+					</div>
+				)
+			}
+
+			<div className="mb-6">
+				<input
+					name="email"
+					type="email"
+					className="authInput"
+					id="login-email"
+					placeholder="Email address"
+				/>
+			</div>
+
+			<div className="mb-6">
+				<input
+					name="password"
+					type="password"
+					className="authInput"
+					id="login-password"
+					placeholder="Password"
+					minLength={8}
+				/>
+			</div>
+
+			<div className="text-center lg:text-left">
+				<button
+					type="submit"
+					className={"authPrimaryButton"}
+					disabled={isLoading}
+				>
+					{isLoading ? "Loading..." : "Register"}
+				</button>
+			</div>
+		</form>
+	)
+}
+
+
+function RegisterCard() {
+	return (
+		<div className="px-6 pt-8 h-full text-gray-800">
+			<div
+				className="flex xl:justify-center lg:justify-between justify-center items-center flex-wrap h-full g-6"
+			>
+				<div
+					className="grow-0 shrink-1 md:shrink-0 basis-auto xl:w-6/12 lg:w-6/12 md:w-9/12 mb-12 md:mb-0"
+				>
+					<img
+						src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+						className="w-full"
+						alt="Sample image"
+					/>
+				</div>
+				<div className="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0">
+					<RegisterForm></RegisterForm>
+				</div>
+			</div>
+		</div>
+	)
+}
+
 export function RegisterPage() {
 	return (
-		<div>
-			<h1>Register</h1>
+		<div className="flex justify-center items-center h-[100%]">
+			<RegisterCard/>
 		</div>
 	)
 }

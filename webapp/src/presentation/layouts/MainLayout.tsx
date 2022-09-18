@@ -35,7 +35,7 @@ function Navbar(){
 		{to: "/login", text: "Login", hideIfAuth: true},
 		{to: "/register", text: "Register", hideIfAuth: true},
 		{to: "/quiz-builder", text: "New Quiz", reqAuth: true},
-		{to: "/logoff", text: "Logoff", action: logoff, reqAuth: true}
+		{to: "/", text: "Logoff", action: logoff, reqAuth: true}
 	]
 
 	return (
