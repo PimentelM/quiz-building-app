@@ -9,7 +9,7 @@ import {Inject} from "typedi";
 let emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 export interface ISimpleMailSender {
-	sendSimpleMail(to: string, subject: string, text: string): Promise<void>
+	sendSimpleMail(to: string, subject: string, text: string, html?: string): Promise<void>
 }
 
 
@@ -74,7 +74,10 @@ export class AuthService {
 
 		delete (user as any).password
 
-		await this.sendUserActivationEmail(email);
+		// Only throws error after function returns...
+		await this.sendUserActivationEmail(email).catch(err=>{
+			setTimeout(()=> {throw err}, 0);
+		})
 
 		return user;
 

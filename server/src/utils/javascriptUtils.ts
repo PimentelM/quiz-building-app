@@ -8,3 +8,7 @@ export async function handlePromise<T = any, E extends Error = any>(
 		return [null, error as E];
 	}
 }
+
+export async function timeout(ms: number): Promise<void> {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
