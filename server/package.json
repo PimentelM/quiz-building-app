@@ -6,7 +6,11 @@
   "license": "MIT",
   "scripts": {
     "test": "jest test --runInBand",
-    "dev": "nodemon ./src/index.ts"
+    "dev": "nodemon ./src/index.ts",
+    "build": "tsc",
+    "lint": "eslint --ext .ts src/",
+    "lint:fix": "eslint --ext .ts src/ --fix",
+    "start": "node ./dist/index.js"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
