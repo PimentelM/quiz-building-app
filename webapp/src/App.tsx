@@ -7,9 +7,9 @@ import {LoginPage, RegisterPage} from "./presentation/pages/AuthPages";
 import {Quiz} from "./presentation/pages/Quiz";
 import {QuizBuilder} from "./presentation/pages/QuizBuilder";
 import {ProvideAuth} from "./hooks/useAuth";
+import {ProvideApi} from "./hooks/useApi";
 
-// Set up a ReactLocation SimpleCache instance
-// const routeCache = new ReactLocationSimpleCache();
+
 // Set up a ReactLocation instance
 const location = new ReactLocation();
 
@@ -27,10 +27,12 @@ function App() {
 			]}
 		>
 			<ProvideAuth>
-				<MainLayout>
-					<Outlet/> {/* Start rendering router matches */}
-					<ReactLocationDevtools/> {/* enable Devtools */}
-				</MainLayout>
+				<ProvideApi>
+					<MainLayout>
+						<Outlet/> {/* Start rendering router matches */}
+						<ReactLocationDevtools/> {/* enable Devtools */}
+					</MainLayout>
+				</ProvideApi>
 			</ProvideAuth>
 		</Router>
 	)

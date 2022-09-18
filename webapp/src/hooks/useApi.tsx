@@ -1,6 +1,6 @@
-import {useMemo} from "react";
-import {useAuth} from "./useAuth";
 import axios, {AxiosError, AxiosInstance} from "axios";
+import React, {useState, useContext, createContext, useEffect, useMemo} from "react";
+import {useAuth} from "./useAuth";
 
 function handleRequestError(error: AxiosError) {
 	if (error.response) {
@@ -23,7 +23,7 @@ class Api {
 	private http: AxiosInstance;
 	constructor(private token?: string) {
 		let headers: any = {};
-		
+
 		if(token) {
 			headers["Authorization"] = `Bearer ${token}`;
 		}
@@ -59,17 +59,34 @@ class Api {
 	}
 }
 
-export function useApi(){
 
+
+interface ApiContextProps {
+	api: Api;
+}
+
+const apiContext = createContext<ApiContextProps>({} as ApiContextProps);
+// Provider component that wraps your app and makes auth object ...
+// ... available to any child component that calls useAuth().
+export function ProvideApi({ children } : any) {
+	const api = useProvideApi();
+	return <apiContext.Provider value={api}>{children}</apiContext.Provider>;
+}
+// Hook for child components to get the auth object ...
+// ... and re-render when it changes.
+export const useApi = () => {
+	return useContext(apiContext);
+};
+
+// Provider hook that creates auth object and handles state
+function useProvideApi() {
 	const {token} = useAuth()
 
 	const api = useMemo(()=>{
 		return new Api(token);
 	},[token])
 
-
 	return {
 		api
 	}
-
 }
