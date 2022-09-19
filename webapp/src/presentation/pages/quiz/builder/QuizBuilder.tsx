@@ -4,7 +4,10 @@ import {useState} from "react";
 import {AutoComplete, Button, Input, Radio, Select} from "antd";
 import TextArea from "antd/es/input/TextArea";
 import {useApi} from "../../../../hooks/useApi";
-import { Link } from "@tanstack/react-location";
+import Icon from "antd/es/icon";
+import {DeleteOutlined} from "@ant-design/icons";
+import {Link, useNavigate} from "@tanstack/react-location";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 function QuestionDisplay({question} : {question: Question}) {
 	let correctAnswers = question.possibleAnswers.filter(x => x.isCorrect).map(x => x.text)
@@ -19,7 +22,9 @@ function QuestionDisplay({question} : {question: Question}) {
 			{question.multipleChoice ? "Correct answers: " : "Correct answer: "}
 		</div>
 		<div className={"flex flex-col"}>
-			{correctAnswers.map((x, i) => <div key={i} className={"text-gray-600"}>- {x}</div>)}
+			{correctAnswers.map((x, i) =>
+				<div key={i} style={{overflowWrap: "break-word"}} className={"text-gray-600 "}> {x}</div>
+			)}
 		</div>
 	</div>
 }
@@ -217,9 +222,18 @@ function AddQuestion({onSubmit, canGoBack, goBack}: { canGoBack: boolean, goBack
 		setCurrentAlternativeText("");
 	}
 
+	function deleteAlternative(i : number){
+		let result = [...alternatives]
+		result.splice(i, 1)
+		setAlternatives(result)
 
-	function handleSubmit(e: any) {
-		e.preventDefault();
+		setCorrectAnswers(correctAnswers.filter(
+			(x)=> result.includes(x)
+		))
+	}
+
+
+	function handleSubmit() {
 
 		// Create question:
 		let answerSignature: boolean[] = alternatives.map(text => correctAnswers.includes(text))
@@ -233,12 +247,27 @@ function AddQuestion({onSubmit, canGoBack, goBack}: { canGoBack: boolean, goBack
 		onSubmit(question, answerSignature)
 	}
 
+	function AddQuestionDebugInfo(){
+		return <div>
+
+			<div>
+				All alternatives: {JSON.stringify(alternatives)}
+			</div>
+			<div>
+				Current correct answers: {JSON.stringify(correctAnswers)}
+			</div>
+			<div>
+				IsValid: {isFormValid ? "true" : "false"}
+			</div>
+		</div>;
+	}
+
 
 	return <div className={"flex flex-col"}>
 		<div className={"pt-12 text-xl"}>
 			2) Now add a question:
 		</div>
-		<form onSubmit={handleSubmit}>
+		<form>
 			<div className={"flex flex-col gap-2"}>
 				<Input onChange={e => setText(e.target.value)} placeholder={"Question text"} required minLength={3}
 					   maxLength={64} name="text"/>
@@ -270,6 +299,20 @@ function AddQuestion({onSubmit, canGoBack, goBack}: { canGoBack: boolean, goBack
 					<Button onClick={addAlternative} disabled={!canAddAlternative} type={"primary"}>Add</Button>
 				</div>
 
+				<div>
+					{alternatives.map((alternative, i) =>
+						<div key={i} className={"flex gap-2"}>
+							<div onClick={()=>deleteAlternative(i)} className="cursor-pointer">
+								<DeleteOutlined />
+							</div>
+							<div className="">
+								{alternative}
+							</div>
+
+						</div>
+					)}
+				</div>
+
 
 				<div className={"text-md font-medium"}>
 					Select the correct alternatives:
@@ -285,27 +328,13 @@ function AddQuestion({onSubmit, canGoBack, goBack}: { canGoBack: boolean, goBack
 						onChange={(value) => setCorrectAnswers((multipleChoice ? value : [value]) as string[])}
 					/>
 				</div>
-				<div>
-					All alternatives: {JSON.stringify(alternatives)}
-				</div>
-				<div>
-					Current correct answers: {JSON.stringify(correctAnswers)}
-				</div>
-				<div>
-					IsValid: {isFormValid ? "true" : "false"}
-				</div>
-
-					{isFormValid && (
-						<button className={"authPrimaryButton"} type="submit">Add Question</button>
-					)}
-					{!isFormValid && (
-						<Button disabled type={"primary"}>Add Question</Button>
-					)}
-
+				     <Button onClick={handleSubmit} disabled={!isFormValid} type={"primary"}>Add Question</Button>
 
 					{canGoBack && (
 						<Button onClick={goBack}>Cancel</Button>
 					)}
+
+				<AddQuestionDebugInfo/>
 
 			</div>
 		</form>
@@ -315,18 +344,28 @@ function AddQuestion({onSubmit, canGoBack, goBack}: { canGoBack: boolean, goBack
 export function QuizBuilder() {
 	usePrivatePage();
 
+	let navigate = useNavigate();
+
 	let {state, quiz, defineQuizTitle, addQuestionToQuiz, permaLinkId, submitQuiz, page, setPage} = useQuizBuilderViewModel();
 
 	console.log(`State: ${JSON.stringify(state)}`)
 
 	if(page === "done"){
-		return <div className={"flex flex-col"}>
-			<div className={"pt-12 text-xl"}>
+		return <div className={"flex flex-col items-center"}>
+			<div className={"pt-12 text-4xl"}>
 				Quiz created!
 			</div>
-			<div>Share the link below with your friends so they can play your quiz!</div>
+			<div className={"text-md pt-12"}>Share the link below with your friends so they can play your quiz!</div>
 			<div>
-				<Link to={`/quiz/${permaLinkId}`}>{`${location.origin}/quiz/${permaLinkId}`}</Link>
+				<Link to={`/quiz/${permaLinkId}`} className={"text-blue-400 underline"}>
+					{`${location.origin}/quiz/${permaLinkId}`}
+				</Link>
+			</div>
+
+			<div className={"pt-4"}>
+				<CopyToClipboard text={`${location.origin}/quiz/${permaLinkId}`}>
+					<Button type={"primary"}>Copy link</Button>
+				</CopyToClipboard>
 			</div>
 		</div>
 	}

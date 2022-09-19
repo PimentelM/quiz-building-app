@@ -136,6 +136,7 @@ function QuizPlayer({quiz}: { quiz: Quiz }) {
 	}
 
 	function DebugData() {
+		return null
 		return (<div>
 			<div className={"flex flex-col"}>
 				<div>
@@ -177,7 +178,7 @@ function QuizPlayer({quiz}: { quiz: Quiz }) {
 
 	return (
 		<Wrapper>
-			<div className={"flex flex-col md:flex-row justify-between px-4 pt-10"}>
+			<div className={"flex flex-col lg:flex-row justify-between px-4 pt-10"}>
 
 				<div className="w-[100%] px-4 pb-20">
 					<TitleAndQuestion/>

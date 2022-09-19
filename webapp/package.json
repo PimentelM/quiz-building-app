@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
     "@tanstack/react-location": "^3.7.4",
     "@tanstack/react-location-devtools": "^3.4.4",
     "antd": "^4.23.2",
@@ -16,6 +17,7 @@
     "formik": "^2.2.9",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18.2.0",
     "yup": "^0.32.11"
   },
@@ -23,6 +25,7 @@
     "@types/jest": "^29.0.3",
     "@types/lodash": "^4.14.185",
     "@types/react": "^18.0.17",
+    "@types/react-copy-to-clipboard": "^5.0.4",
     "@types/react-dom": "^18.0.6",
     "@vitejs/plugin-react": "^2.1.0",
     "autoprefixer": "^10.4.11",
