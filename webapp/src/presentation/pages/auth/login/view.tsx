@@ -1,9 +1,9 @@
-import {Link, useNavigate} from "@tanstack/react-location"
-import {useLoginForm, useRegisterForm} from "./viewModel";
+import {Link} from "@tanstack/react-location"
+import {useActivateAccountViewModel, useLoginViewModel, useRegisterViewModel} from "./viewModel";
 
 function LoginForm() {
 
-	let {error, isLoading, handleSubmit} = useLoginForm()
+	let {error, isLoading, handleSubmit} = useLoginViewModel()
 
 	return (
 		<form
@@ -16,13 +16,7 @@ function LoginForm() {
 
 			</div>
 
-			{
-				(error) && (
-					<div className="text-red-400">
-						{error}
-					</div>
-				)
-			}
+			<ErrorDisplay error={error}/>
 
 			<div className="mb-6">
 				<input
@@ -70,69 +64,33 @@ function LoginForm() {
 					{isLoading ? "Loading..." : "Login"}
 				</button>
 			</div>
-		</form>
-	)
-}
-
-function LoginCard() {
-	return (
-		<div className="px-6 pt-8 h-full text-gray-800">
-			<div
-				className="flex xl:justify-center lg:justify-between justify-center items-center flex-wrap h-full g-6"
-			>
-				<div
-					className="grow-0 shrink-1 md:shrink-0 basis-auto xl:w-6/12 lg:w-6/12 md:w-9/12 mb-12 md:mb-0"
-				>
-					<img
-						src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-						className="w-full"
-						alt="Sample image"
-					/>
-				</div>
-				<div className="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0">
-					<LoginForm></LoginForm>
-					<div className="flex flex-col items-center">
-						<Link to="/forgot-password">
-							<p className="text-sm font-semibold mt-2 pt-1 mb-0">
-								Forgot password?
-							</p>
-						</Link>
-						<Link to="/resend-verification">
-							<p className="text-sm font-semibold mt-2 pt-1 mb-0">
-								Resend verification email
-							</p>
-						</Link>
-						<Link to="/register">
-							<p className="text-sm font-semibold mt-2 pt-1 mb-0">
-								Don't have an account?
-							</p>
-						</Link>
-					</div>
-				</div>
+			<div className="flex flex-col items-center">
+				<Link to="/forgot-password">
+					<p className="text-sm font-semibold mt-2 pt-1 mb-0">
+						Forgot password?
+					</p>
+				</Link>
+				<Link to="/resend-verification">
+					<p className="text-sm font-semibold mt-2 pt-1 mb-0">
+						Resend verification email
+					</p>
+				</Link>
+				<Link to="/register">
+					<p className="text-sm font-semibold mt-2 pt-1 mb-0">
+						Don't have an account?
+					</p>
+				</Link>
 			</div>
-		</div>
-	)
-}
-
-export function LoginPage() {
-
-	return (
-		<div className="flex justify-center items-center h-[100%]">
-			<LoginCard/>
-		</div>
+		</form>
 	)
 }
 
 function RegisterForm() {
 
-	let {error, isLoading, handleSubmit, successMessage} = useRegisterForm()
+	let {error, isLoading, handleSubmit, successMessage} = useRegisterViewModel()
 
-	if(successMessage) {
-		return (
-			<div className="text-green-400 text-center">
-				{successMessage}
-			</div>
-		)
+	if (successMessage) {
+		return (<MessageDisplay message={successMessage}/>)
 	}
 
 	return (
@@ -147,13 +105,7 @@ function RegisterForm() {
 			</div>
 
 
-			{
-				(error) && (
-					<div className="text-red-400">
-						{error}
-					</div>
-				)
-			}
+			<ErrorDisplay error={error}/>
 
 			<div className="mb-6">
 				<input
@@ -185,61 +137,123 @@ function RegisterForm() {
 					{isLoading ? "Loading..." : "Register"}
 				</button>
 			</div>
+			<div className="flex flex-col items-center">
+				<Link to="/forgot-password">
+					<p className="text-sm font-semibold mt-2 pt-1 mb-0">
+						Forgot password?
+					</p>
+				</Link>
+				<Link to="/resend-verification">
+					<p className="text-sm font-semibold mt-2 pt-1 mb-0">
+						Resend verification email
+					</p>
+				</Link>
+				<Link to="/login">
+					<p className="text-sm font-semibold mt-2 pt-1 mb-0">
+						Already have an account?
+					</p>
+				</Link>
+			</div>
 		</form>
 	)
 }
 
-
-function RegisterCard() {
+export function LoginPage() {
 	return (
-		<div className="px-6 pt-8 h-full text-gray-800">
-			<div
-				className="flex xl:justify-center lg:justify-between justify-center items-center flex-wrap h-full g-6"
-			>
+		<AuthCard>
+			<LoginForm/>
+		</AuthCard>
+	)
+}
+
+export function RegisterPage() {
+	return (
+		<AuthCard>
+			<RegisterForm/>
+		</AuthCard>
+	)
+}
+
+export function ForgotPasswordPage() {
+	return (
+		<AuthCard>
+
+		</AuthCard>
+	)
+}
+
+export function ResetPasswordPage() {
+	return (
+		<AuthCard>
+
+		</AuthCard>
+	)
+}
+
+export function ActivateAccountPage() {
+	let {error, isLoading, successMessage} = useActivateAccountViewModel()
+
+	return (
+		<AuthCard>
+			<ErrorDisplay error={error}/>
+			{isLoading ? <div>Loading...</div> : null}
+			<MessageDisplay message={successMessage}/>
+		</AuthCard>
+	)
+}
+
+export function ResendEmailVerificationPage() {
+	return (
+		<AuthCard>
+
+		</AuthCard>
+	)
+}
+
+
+function AuthCard({children}: { children: React.ReactNode }) {
+	return (
+		<div className="flex justify-center items-center h-[100%]">
+
+			<div className="px-6 pt-8 h-full text-gray-800">
 				<div
-					className="grow-0 shrink-1 md:shrink-0 basis-auto xl:w-6/12 lg:w-6/12 md:w-9/12 mb-12 md:mb-0"
+					className="flex xl:justify-center lg:justify-between justify-center items-center flex-wrap h-full g-6"
 				>
-					<img
-						src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
-						className="w-full"
-						alt="Sample image"
-					/>
-				</div>
-				<div className="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0">
-					<RegisterForm></RegisterForm>
+					<div
+						className="grow-0 shrink-1 md:shrink-0 basis-auto xl:w-6/12 lg:w-6/12 md:w-9/12 mb-12 md:mb-0"
+					>
+						<img
+							src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+							className="w-full"
+							alt="Sample image"
+						/>
+					</div>
+					<div className="xl:ml-20 xl:w-5/12 lg:w-5/12 md:w-8/12 mb-12 md:mb-0">
+						{children}
+					</div>
 				</div>
 			</div>
 		</div>
 	)
 }
 
-export function RegisterPage() {
+
+function ErrorDisplay({error}: { error: string }) {
+	if (!error) return null
+
 	return (
-		<div className="flex justify-center items-center h-[100%]">
-			<RegisterCard/>
+		<div className="text-red-400">
+			{error}
 		</div>
 	)
 }
 
-export function ForgotPasswordPage() {
+function MessageDisplay({message}: { message: string }) {
+	if (!message) return null
+
 	return (
-		<div>
-			<h1>Forgot Password</h1>
-		</div>)
+		<div className="text-green-400">
+			{message}
+		</div>
+	)
 }
-
-export function ResetPasswordPage() {
-	return (
-		<div>
-			<h1>Reset Password</h1>
-		</div>)
-}
-
-export function VerifyEmailPage() {
-	return (
-		<div>
-			<h1>Verify Email</h1>
-		</div>)
-}
-
-

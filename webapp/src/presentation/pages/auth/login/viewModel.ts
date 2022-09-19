@@ -1,10 +1,10 @@
 import {useApi} from "../../../../hooks/useApi";
 import {useAuth} from "../../../../hooks/useAuth";
-import {useState} from "react";
-import {useNavigate} from "@tanstack/react-location";
+import {useEffect, useState} from "react";
+import {useMatch, useNavigate} from "@tanstack/react-location";
 
 
-export function useLoginForm(){
+export function useLoginViewModel(){
 	let {api} = useApi()
 	let {storeToken} = useAuth()
 
@@ -51,7 +51,7 @@ export function useLoginForm(){
 }
 
 
-export function useRegisterForm(){
+export function useRegisterViewModel(){
 	let {api} = useApi()
 
 	let [error, setError] = useState("")
@@ -89,6 +89,49 @@ export function useRegisterForm(){
 		error,
 		isLoading,
 		handleSubmit,
+		successMessage
+	}
+
+
+}
+
+
+
+export function useActivateAccountViewModel(){
+	let {api} = useApi()
+
+	let [error, setError] = useState("")
+	let [isLoading, setIsLoading] = useState(false)
+
+	let [successMessage, setSuccessMessage] = useState("")
+
+	let query = useMatch().search;
+	let token = query.token;
+
+	useEffect(()=>{
+		if(!token) {
+			setError("Token is missing")
+			return
+		}
+		console.log("Activating account...")
+		setIsLoading(true)
+		setError("")
+		api.activateAccount(token as string).then(
+			data=>{
+				setSuccessMessage(data.message)
+				console.log("activation success")
+			}
+		).catch(error=>{
+			setError(error.message)
+			setSuccessMessage("")
+		}).finally(()=>{
+			setIsLoading(false)
+		})
+	},[token]);
+
+	return {
+		error,
+		isLoading,
 		successMessage
 	}
 

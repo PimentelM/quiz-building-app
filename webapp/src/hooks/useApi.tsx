@@ -57,6 +57,14 @@ class Api {
 
 		return response?.data;
 	}
+
+	async activateAccount(token: string) {
+		let response = await this.http.post("/auth/activate-account", {token}).catch(
+			handleRequestError
+		);
+
+		return response?.data;
+	}
 }
 
 

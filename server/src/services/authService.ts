@@ -101,7 +101,7 @@ export class AuthService {
 			email
 		}, config.jwtSecret, {expiresIn: "1h"});
 
-		let emailBody = `Please, access the following link to activate your account: ${config.frontendUrl}/activate-user?token=${token}`;
+		let emailBody = `Please, access the following link to activate your account: ${config.frontendUrl}/activate-account?token=${token}`;
 
 		await this.mailSenderService.sendSimpleMail(
 			email,
