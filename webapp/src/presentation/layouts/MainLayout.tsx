@@ -14,7 +14,7 @@ function NavbarItem({to, children, reqAuth, hideIfAuth, action}: any) {
 	}
 
 	return (
-		<Link onClick={action} to={to} className="mr-4 text-xl font-bold">
+		<Link onClick={action} to={to} className="mr-4 text-gray-50 text-2xl font-light font-sans">
 			{children}
 		</Link>
 	);
@@ -39,11 +39,11 @@ function Navbar(){
 	]
 
 	return (
-		<div className="h-10 w-[100%] bg-gray-200 flex justify-between">
+		<div className="h-10 w-[100%] bg-blue-400 flex justify-between">
 			<div className="flex items-center">
 				<Link to="/"
 				>
-					<div className="ml-4 text-2xl font-bold">Quiz App</div>
+					<div className="ml-4 text-white text-2xl font-bold">Quiz App</div>
 				</Link>
 			</div>
 
