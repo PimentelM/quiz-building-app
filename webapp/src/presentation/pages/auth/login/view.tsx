@@ -3,7 +3,7 @@ import {
 	useActivateAccountViewModel,
 	useLoginViewModel,
 	useRegisterViewModel,
-	useForgotPasswordViewModel, useResetPasswordViewModel
+	useForgotPasswordViewModel, useResetPasswordViewModel, useResendVerificationEmailViewModel
 } from "./viewModel";
 
 function LoginForm() {
@@ -25,6 +25,7 @@ function LoginForm() {
 
 			<div className="mb-6">
 				<input
+					required={true}
 					name="email"
 					type="email"
 					className="authInput"
@@ -35,6 +36,7 @@ function LoginForm() {
 
 			<div className="mb-6">
 				<input
+					required={true}
 					name="password"
 					type="password"
 					className="authInput"
@@ -114,6 +116,7 @@ function ForgotPasswordForm() {
 
 			<div className="mb-6">
 				<input
+					required={true}
 					name="email"
 					type="email"
 					className="authInput"
@@ -159,6 +162,7 @@ function RegisterForm() {
 
 			<div className="mb-6">
 				<input
+					required={true}
 					name="email"
 					type="email"
 					className="authInput"
@@ -169,6 +173,7 @@ function RegisterForm() {
 
 			<div className="mb-6">
 				<input
+					required={true}
 					name="password"
 					type="password"
 					className="authInput"
@@ -232,6 +237,7 @@ function ResetPasswordForm() {
 
 			<div className="mb-6">
 				<input
+					required={true}
 					name="password"
 					type="password"
 					className="authInput"
@@ -253,6 +259,52 @@ function ResetPasswordForm() {
 		</form>
 	)
 }
+
+function ResendEmailVerificationForm() {
+
+	let {error, isLoading, handleSubmit, successMessage} = useResendVerificationEmailViewModel()
+
+	if (successMessage) {
+		return (<MessageDisplay message={successMessage}/>)
+	}
+
+	return (
+		<form
+			onSubmit={handleSubmit}
+		>
+			<div className={"flex justify-center"}>
+				<div className="pb-4 font-medium">
+					Resend Verification Email
+				</div>
+
+			</div>
+
+			<ErrorDisplay error={error}/>
+
+			<div className="mb-6">
+				<input
+					required={true}
+					name="email"
+					type="email"
+					className="authInput"
+					id="login-email"
+					placeholder="Email address"
+				/>
+			</div>
+
+			<div className="text-center lg:text-left">
+				<button
+					type="submit"
+					className={"authPrimaryButton"}
+					disabled={isLoading}
+				>
+					{isLoading ? "Loading..." : "Resend Verification Email"}
+				</button>
+			</div>
+		</form>
+	)
+}
+
 
 export function LoginPage() {
 	return (
@@ -301,7 +353,7 @@ export function ActivateAccountPage() {
 export function ResendEmailVerificationPage() {
 	return (
 		<AuthCard>
-
+			<ResendEmailVerificationForm/>
 		</AuthCard>
 	)
 }
