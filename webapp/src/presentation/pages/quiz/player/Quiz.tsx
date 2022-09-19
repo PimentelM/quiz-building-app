@@ -169,7 +169,7 @@ function QuizPlayer({quiz}: { quiz: Quiz }) {
 				</div>
 
 				{percent >= 0.5 && (<div className={"pt-8"}>
-					<Image src={"https://upload.wikimedia.org/wikipedia/commons/b/bd/Checkmark_green.svg"}/>
+					<img src={"https://upload.wikimedia.org/wikipedia/commons/b/bd/Checkmark_green.svg"}/>
 				</div>)}
 			</div>
 		</Wrapper>
