@@ -3,7 +3,7 @@ import {
 	useActivateAccountViewModel,
 	useLoginViewModel,
 	useRegisterViewModel,
-	useForgotPasswordViewModel
+	useForgotPasswordViewModel, useResetPasswordViewModel
 } from "./viewModel";
 
 function LoginForm() {
@@ -135,7 +135,6 @@ function ForgotPasswordForm() {
 	)
 }
 
-
 function RegisterForm() {
 
 	let {error, isLoading, handleSubmit, successMessage} = useRegisterViewModel()
@@ -209,6 +208,52 @@ function RegisterForm() {
 	)
 }
 
+function ResetPasswordForm() {
+
+	let {error, isLoading, handleSubmit, successMessage} = useResetPasswordViewModel()
+
+	if (successMessage) {
+		return (<MessageDisplay message={successMessage}/>)
+	}
+
+	return (
+		<form
+			onSubmit={handleSubmit}
+		>
+			<div className={"flex justify-center"}>
+				<div className="pb-4 font-medium">
+					Reset Password
+				</div>
+
+			</div>
+
+
+			<ErrorDisplay error={error}/>
+
+			<div className="mb-6">
+				<input
+					name="password"
+					type="password"
+					className="authInput"
+					id="login-password"
+					placeholder="Password"
+					minLength={8}
+				/>
+			</div>
+
+			<div className="text-center lg:text-left">
+				<button
+					type="submit"
+					className={"authPrimaryButton"}
+					disabled={isLoading}
+				>
+					{isLoading ? "Loading..." : "Reset Password"}
+				</button>
+			</div>
+		</form>
+	)
+}
+
 export function LoginPage() {
 	return (
 		<AuthCard>
@@ -236,7 +281,7 @@ export function ForgotPasswordPage() {
 export function ResetPasswordPage() {
 	return (
 		<AuthCard>
-
+			<ResetPasswordForm/>
 		</AuthCard>
 	)
 }
