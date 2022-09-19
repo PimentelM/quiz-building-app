@@ -1,7 +1,7 @@
 import {useApi} from "../../../../hooks/useApi";
 import {useMatch} from "@tanstack/react-location";
 import {useCallback, useEffect, useMemo, useState} from "react";
-import {PossibleAnswer, Question, Quiz} from "../../../../domain/models/quiz";
+import {PossibleAnswer, Question, Quiz} from "../dtos";
 import {Button, Image} from "antd";
 
 
@@ -43,7 +43,7 @@ function QuizPlayer({quiz}: { quiz: Quiz }) {
 
 
 		setIsSubmitting(true);
-		api.getScore(quiz._id, answers).then(({score}) => {
+		api.getScore(quiz._id!, answers).then(({score}) => {
 			setIsSubmitting(false);
 			setScore(score);
 		});
@@ -157,7 +157,7 @@ function QuizPlayer({quiz}: { quiz: Quiz }) {
 	if (isFinished) {
 		let percent = score/questionCount
 		return <Wrapper>
-			<div className={"flex flex-col md:flex-row justify-between items-center px-4 pt-10"}>
+			<div className={"flex flex-col justify-between items-center px-4 pt-10"}>
 
 
 				<div className="font-medium text-center text-2xl mb-0">

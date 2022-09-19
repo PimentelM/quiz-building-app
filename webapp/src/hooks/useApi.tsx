@@ -98,6 +98,23 @@ class Api {
 
 		return response?.data;
 	}
+
+	async listQuizes() {
+		let response = await this.http.get("/quiz").catch(
+			handleRequestError
+		);
+
+		return response?.data;
+	}
+
+	async deleteQuiz(_id: string) {
+		let response = await this.http.delete(`/quiz/${_id}`).catch(
+			handleRequestError
+		);
+
+		return response?.data;
+	}
+
 }
 
 
