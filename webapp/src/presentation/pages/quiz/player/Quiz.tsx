@@ -2,7 +2,7 @@ import {useApi} from "../../../../hooks/useApi";
 import {useMatch} from "@tanstack/react-location";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {PossibleAnswer, Question, Quiz} from "../../../../domain/models/quiz";
-import {Button} from "antd";
+import {Button, Image} from "antd";
 
 
 function QuizPlayer({quiz}: { quiz: Quiz }) {
@@ -19,6 +19,9 @@ function QuizPlayer({quiz}: { quiz: Quiz }) {
 
 	let canProceed = selected.find(x => x);
 
+	let [score, setScore] = useState(-1)
+	let isFinished = score !== -1
+
 	function nextQuestion() {
 		setIndex(i => ++i)
 		setSavedAnswers([...savedAnswers, selected])
@@ -29,10 +32,11 @@ function QuizPlayer({quiz}: { quiz: Quiz }) {
 	}, [index])
 
 	let [isSubmitting, setIsSubmitting] = useState(false)
+
 	function submitQuiz() {
 		let answers = savedAnswers
 
-		if(savedAnswers.length < questionCount) {
+		if (savedAnswers.length < questionCount) {
 			answers = [...savedAnswers, selected]
 			setSavedAnswers(answers);
 		}
@@ -41,9 +45,8 @@ function QuizPlayer({quiz}: { quiz: Quiz }) {
 		setIsSubmitting(true);
 		api.getScore(quiz._id, answers).then(({score}) => {
 			setIsSubmitting(false);
-			alert(`You got ${score} questions out of ${questionCount} correct!`)
+			setScore(score);
 		});
-
 
 
 	}
@@ -65,13 +68,13 @@ function QuizPlayer({quiz}: { quiz: Quiz }) {
 
 	function ControlButtons() {
 		if (index === quiz.questions.length - 1) {
-			return <Button disabled={!canProceed || isSubmitting} className={"w-[130px]"} onClick={submitQuiz}
+			return <Button loading={isSubmitting} disabled={!canProceed || isFinished} className={"w-[130px]"}
+						   onClick={submitQuiz}
 						   type="primary">Submit</Button>
 
 		} else {
 			return <Button disabled={!canProceed} className={"w-[130px]"} onClick={nextQuestion} type="primary">Next
 				question</Button>
-
 		}
 	}
 
@@ -81,13 +84,13 @@ function QuizPlayer({quiz}: { quiz: Quiz }) {
 		let text = option.text
 		let selectedStyle = isSelected ? "bg-blue-500 text-white" : "bg-white text-black"
 
-		return <div  onClick={() => toggleAnswer(i)} key={index}
-				style={{height: "50px", borderRadius: "150px"}}
-				className={"w-[100%] mb-3 border" + " " + selectedStyle}>
+		return <div onClick={() => toggleAnswer(i)} key={index}
+					style={{height: "50px", borderRadius: "150px"}}
+					className={"w-[100%] mb-3 border" + " " + selectedStyle}>
 			<div className={"flex justify-between items-center px-3 h-[100%]"}>
 				<div>
 					<div style={{overflowWrap: "break-word", whiteSpace: "normal"}}
-						 className={"max-w-[300px] md:max-w-[400px] lg:max-w-[700px]"}>
+						 className={"max-w-[720px]"}>
 						{letter}) {text}
 					</div>
 				</div>
@@ -114,8 +117,11 @@ function QuizPlayer({quiz}: { quiz: Quiz }) {
 						<div className={"text-sm text-gray-500"}>Question {index + 1} of {quiz.questions.length}</div>
 					</div>
 
-					<div className={"pt-8 font-sans"}>
-						{question.text}
+					<div>
+						<div style={{whiteSpace: "normal", overflowWrap: "break-word"}}
+							 className={"pt-8 font-sans max-w-[300px]"}>
+							{question.text}
+						</div>
 					</div>
 
 				</div>
@@ -142,8 +148,35 @@ function QuizPlayer({quiz}: { quiz: Quiz }) {
 		</div>)
 	}
 
+	function Wrapper({children}: { children: React.ReactNode }) {
+		return <div style={{fontFamily: "sans-serif"}} className={""}>
+			{children}
+		</div>
+	}
+
+	if (isFinished) {
+		let percent = score/questionCount
+		return <Wrapper>
+			<div className={"flex flex-col md:flex-row justify-between items-center px-4 pt-10"}>
+
+
+				<div className="font-medium text-center text-2xl mb-0">
+					{quiz.title}
+				</div>
+
+				<div className={"py-10 text-lg text-center"}>
+					You answered {score} out of {questionCount} questions correctly
+				</div>
+
+				{percent >= 0.5 && (<div className={"pt-8"}>
+					<Image src={"https://upload.wikimedia.org/wikipedia/commons/b/bd/Checkmark_green.svg"}/>
+				</div>)}
+			</div>
+		</Wrapper>
+	}
+
 	return (
-		<div style={{fontFamily: "sans-serif"}} className={""}>
+		<Wrapper>
 			<div className={"flex flex-col md:flex-row justify-between px-4 pt-10"}>
 
 				<div className="w-[100%] px-4 pb-20">
@@ -169,7 +202,7 @@ function QuizPlayer({quiz}: { quiz: Quiz }) {
 				<DebugData/>
 
 			</div>
-		</div>
+		</Wrapper>
 	)
 }
 
