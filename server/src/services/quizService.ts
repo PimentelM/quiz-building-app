@@ -4,6 +4,7 @@ import {QuizRepository} from "../repositories/quiz";
 import {AnswerSignature, Quiz} from "../models/quiz";
 import {InvalidInputError, NotFoundError} from "../utils/applicationErrorClasses";
 import {PublicQuiz} from "../dtos/publicQuiz";
+import {ListElementQuiz} from "../dtos/listElementQuiz";
 @Injectable()
 export class QuizService {
 
@@ -28,7 +29,7 @@ export class QuizService {
 		return quiz;
 	}
 
-	public async listQuizes(ownerId: string) : Promise<Quiz[]> {
+	public async listQuizes(ownerId: string) : Promise<ListElementQuiz[]> {
 		return await this.quizRepository.listQuizes(ownerId);
 	}
 

@@ -2,13 +2,14 @@ import {Quiz} from "../models/quiz";
 import {db} from "../database";
 import {createQuiz} from "../factories/quiz";
 import {Injectable} from "../utils/architecturalDecorators";
+import {ListElementQuiz} from "../dtos/listElementQuiz";
 
 interface IQuizRepository {
 	getQuizById(id: string): Promise<Quiz | null>
 	getQuizByPermaLinkId(permaLinkId: string): Promise<Quiz | null>
 	findAndDeleteQuizById(id: string): Promise<Quiz | null>
 	saveQuiz(quiz: Quiz): Promise<void>
-	listQuizes(ownerId: string): Promise<Quiz[]>
+	listQuizes(ownerId: string): Promise<ListElementQuiz[]>
 }
 
 @Injectable()
@@ -45,10 +46,10 @@ export class QuizRepository implements IQuizRepository {
 		await db.Quiz.create(quiz);
 	}
 
-	async listQuizes(ownerId: string): Promise<Quiz[]> {
+	async listQuizes(ownerId: string): Promise<ListElementQuiz[]> {
 		let results = await db.Quiz.find({ownerId});
 
-		let quizes = results.map((result) => createQuiz(result.toObject()));
+		let quizes = results.map((result) => new ListElementQuiz(createQuiz(result.toObject())));
 
 		return quizes;
 	}

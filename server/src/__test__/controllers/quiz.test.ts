@@ -115,11 +115,15 @@ describe("Quiz Controller", () => {
 		expect(response.body).toHaveLength(2);
 		expect(response.body).toContainEqual(expect.objectContaining({
 			_id: expect.any(String),
-			...quizCreationData1
+			permaLinkId: expect.any(String),
+			title: expect.any(String),
+			questionCount: expect.any(Number),
 		}))
 		expect(response.body).toContainEqual(expect.objectContaining({
 			_id: expect.any(String),
-			...quizCreationData2
+			permaLinkId: expect.any(String),
+			title: expect.any(String),
+			questionCount: expect.any(Number),
 		}));
 	})
 
