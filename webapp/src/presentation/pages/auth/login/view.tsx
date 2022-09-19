@@ -1,5 +1,10 @@
 import {Link} from "@tanstack/react-location"
-import {useActivateAccountViewModel, useLoginViewModel, useRegisterViewModel} from "./viewModel";
+import {
+	useActivateAccountViewModel,
+	useLoginViewModel,
+	useRegisterViewModel,
+	useForgotPasswordViewModel
+} from "./viewModel";
 
 function LoginForm() {
 
@@ -84,6 +89,52 @@ function LoginForm() {
 		</form>
 	)
 }
+
+function ForgotPasswordForm() {
+
+	let {error, isLoading, handleSubmit, successMessage} = useForgotPasswordViewModel()
+
+	if (successMessage) {
+		return (<MessageDisplay message={successMessage}/>)
+	}
+
+	return (
+		<form
+			onSubmit={handleSubmit}
+		>
+			<div className={"flex justify-center"}>
+				<div className="pb-4 font-medium">
+					Send Reset Password Email
+				</div>
+
+			</div>
+
+
+			<ErrorDisplay error={error}/>
+
+			<div className="mb-6">
+				<input
+					name="email"
+					type="email"
+					className="authInput"
+					id="login-email"
+					placeholder="Email address"
+				/>
+			</div>
+
+			<div className="text-center lg:text-left">
+				<button
+					type="submit"
+					className={"authPrimaryButton"}
+					disabled={isLoading}
+				>
+					{isLoading ? "Loading..." : "Send Reset Password Email"}
+				</button>
+			</div>
+		</form>
+	)
+}
+
 
 function RegisterForm() {
 
@@ -177,7 +228,7 @@ export function RegisterPage() {
 export function ForgotPasswordPage() {
 	return (
 		<AuthCard>
-
+			<ForgotPasswordForm/>
 		</AuthCard>
 	)
 }

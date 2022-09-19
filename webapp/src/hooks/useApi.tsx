@@ -65,6 +65,29 @@ class Api {
 
 		return response?.data;
 	}
+	async sendPasswordResetEmail(email: string) {
+		let response = await this.http.post("/auth/send-reset-password-email", {email}).catch(
+			handleRequestError
+		);
+
+		return response?.data;
+	}
+	
+	async resetPassword(token: string, password: string) {
+		let response = await this.http.post("/auth/reset-password", {token, password}).catch(
+			handleRequestError
+		);
+
+		return response?.data;
+	}
+
+	async resendActivationEmail(email: string) {
+		let response = await this.http.post("/auth/resend-activation-email", {email}).catch(
+			handleRequestError
+		);
+
+		return response?.data;
+	}
 }
 
 
