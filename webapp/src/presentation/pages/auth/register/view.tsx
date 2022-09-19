@@ -1,12 +1,14 @@
-import {Link} from "@tanstack/react-location"
-import {
-	useLoginViewModel,
-} from "./viewModel";
 import {AuthCard, ErrorDisplay, MessageDisplay} from "../components";
+import {Link} from "@tanstack/react-location";
+import {useRegisterViewModel} from "./viewModel";
 
-function LoginForm() {
+function RegisterForm() {
 
-	let {error, isLoading, handleSubmit} = useLoginViewModel()
+	let {error, isLoading, handleSubmit, successMessage} = useRegisterViewModel()
+
+	if (successMessage) {
+		return (<MessageDisplay message={successMessage}/>)
+	}
 
 	return (
 		<form
@@ -14,10 +16,11 @@ function LoginForm() {
 		>
 			<div className={"flex justify-center"}>
 				<div className="pb-4 font-medium">
-					Login
+					Register
 				</div>
 
 			</div>
+
 
 			<ErrorDisplay error={error}/>
 
@@ -44,29 +47,13 @@ function LoginForm() {
 				/>
 			</div>
 
-			<div className="flex justify-between items-center mb-6">
-				<div className="form-group form-check">
-					<input
-						type="checkbox"
-						className="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-						name="rememberMe"
-						id="login-rememberMe"
-					/>
-					<label className="form-check-label inline-block text-gray-800" htmlFor="exampleCheck2"
-					>Remember me</label
-					>
-				</div>
-			</div>
-
 			<div className="text-center lg:text-left">
 				<button
 					type="submit"
 					className={"authPrimaryButton"}
-					value="Login"
 					disabled={isLoading}
-
 				>
-					{isLoading ? "Loading..." : "Login"}
+					{isLoading ? "Loading..." : "Register"}
 				</button>
 			</div>
 			<div className="flex flex-col items-center">
@@ -80,9 +67,9 @@ function LoginForm() {
 						Resend verification email
 					</p>
 				</Link>
-				<Link to="/register">
+				<Link to="/login">
 					<p className="text-sm font-semibold mt-2 pt-1 mb-0">
-						Don't have an account?
+						Already have an account?
 					</p>
 				</Link>
 			</div>
@@ -90,11 +77,12 @@ function LoginForm() {
 	)
 }
 
-export function LoginPage() {
+
+
+export function RegisterPage() {
 	return (
 		<AuthCard>
-			<LoginForm/>
+			<RegisterForm/>
 		</AuthCard>
 	)
 }
-

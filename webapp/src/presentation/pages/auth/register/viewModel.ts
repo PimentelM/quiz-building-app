@@ -1,41 +1,35 @@
 import {useApi} from "../../../../hooks/useApi";
-import {useAuth} from "../../../../hooks/useAuth";
-import {useEffect, useState} from "react";
-import {useMatch, useNavigate} from "@tanstack/react-location";
+import {useState} from "react";
 
-
-export function useLoginViewModel(){
+export function useRegisterViewModel(){
 	let {api} = useApi()
-	let {storeToken} = useAuth()
 
 	let [error, setError] = useState("")
 	let [isLoading, setIsLoading] = useState(false)
 
-	let navigate = useNavigate()
+	let [successMessage, setSuccessMessage] = useState("")
 
 	function handleSubmit(e: any) {
 		console.log(`clicked...`)
 		e.preventDefault();
 
-
 		let formData = new FormData(e.target);
 
 		let email = formData.get("email")
 		let password = formData.get("password")
-		let rememberMe = formData.get("rememberMe") === "on"
 
-		console.log(email, password, rememberMe)
+		console.log(email, password)
 
 		setIsLoading(true)
 		setError("")
-		api.login(email as string, password as string).then(
+		api.register(email as string, password as string).then(
 			data=>{
-				storeToken(data.token, rememberMe)
-				console.log("login success")
-				navigate({to: "/"})
+				setSuccessMessage(data.message)
+				console.log("register success")
 			}
 		).catch(error=>{
 			setError(error.message)
+			setSuccessMessage("")
 		}).finally(()=>{
 			setIsLoading(false)
 		})
@@ -44,13 +38,10 @@ export function useLoginViewModel(){
 	return {
 		error,
 		isLoading,
-		handleSubmit
+		handleSubmit,
+		successMessage
 	}
 
 
 }
-
-
-
-
 
