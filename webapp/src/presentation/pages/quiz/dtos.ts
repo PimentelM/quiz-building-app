@@ -1,7 +1,7 @@
 
 export interface PossibleAnswer {
 	text: string,
-	isCorrect?: boolean,
+	isCorrect: boolean,
 }
 
 export interface Question {

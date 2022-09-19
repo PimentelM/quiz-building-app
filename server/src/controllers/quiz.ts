@@ -51,7 +51,9 @@ export class QuizController {
 
 	@Delete("/:id", requireAuth)
 	async deleteById(req,res) {
-		let quiz = await this.quizService.findAndDeleteQuizById(req.params.id);
+		let userId = getRequestContext().userId
+		if(!userId) throw new AppError("User must be authenticated to delete a quiz");
+		let quiz = await this.quizService.findAndDeleteQuizById(req.params.id, userId);
 		res.send(quiz);
 	}
 

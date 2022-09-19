@@ -73,8 +73,8 @@ export class QuizService {
 		return new PublicQuiz(quiz);
 	}
 
-	public async findAndDeleteQuizById(id: string) : Promise<Quiz> {
-		let quiz = await this.quizRepository.findAndDeleteQuizById(id);
+	public async findAndDeleteQuizById(id: string, ownerId: string) : Promise<Quiz> {
+		let quiz = await this.quizRepository.findAndDeleteQuizById(id, ownerId);
 
 		if(!quiz) {
 			throw new NotFoundError("Quiz not found");

@@ -7,7 +7,7 @@ import {ListElementQuiz} from "../dtos/listElementQuiz";
 interface IQuizRepository {
 	getQuizById(id: string): Promise<Quiz | null>
 	getQuizByPermaLinkId(permaLinkId: string): Promise<Quiz | null>
-	findAndDeleteQuizById(id: string): Promise<Quiz | null>
+	findAndDeleteQuizById(id: string, ownerId: string): Promise<Quiz | null>
 	saveQuiz(quiz: Quiz): Promise<void>
 	listQuizes(ownerId: string): Promise<ListElementQuiz[]>
 }
@@ -34,8 +34,11 @@ export class QuizRepository implements IQuizRepository {
 		return createQuiz(result.toObject());
 	}
 
-	async findAndDeleteQuizById(id: string): Promise<Quiz | null> {
-		let result = await db.Quiz.findByIdAndDelete(id);
+	async findAndDeleteQuizById(id: string, ownerId: string): Promise<Quiz | null> {
+		let result = await db.Quiz.findOneAndDelete({
+			_id: id,
+			ownerId
+		});
 
 		let quiz = result ? createQuiz(result.toObject()) : null;
 

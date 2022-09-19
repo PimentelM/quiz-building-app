@@ -14,4 +14,6 @@ const schema = new Schema({
 	}]
 });
 
+schema.index({ownerId: 1, _id: 1}, {unique: true});
+
 export default model("Quiz", schema);

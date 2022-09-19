@@ -1,6 +1,7 @@
 import axios, {AxiosError, AxiosInstance} from "axios";
 import React, {useState, useContext, createContext, useEffect, useMemo} from "react";
 import {useAuth} from "./useAuth";
+import {Quiz} from "../presentation/pages/quiz/dtos";
 
 function handleRequestError(error: AxiosError) {
 	if (error.response) {
@@ -109,6 +110,14 @@ class Api {
 
 	async deleteQuiz(_id: string) {
 		let response = await this.http.delete(`/quiz/${_id}`).catch(
+			handleRequestError
+		);
+
+		return response?.data;
+	}
+
+	async createQuiz(quiz: Quiz) {
+		let response = await this.http.post("/quiz", quiz).catch(
 			handleRequestError
 		);
 

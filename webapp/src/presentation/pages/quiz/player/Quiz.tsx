@@ -139,10 +139,10 @@ function QuizPlayer({quiz}: { quiz: Quiz }) {
 		return (<div>
 			<div className={"flex flex-col"}>
 				<div>
-					Answer Signature: {JSON.stringify(selected)}
+					Answer Signature: {JSON.stringify(selected, null, 2)}
 				</div>
 				<div>
-					All answers: {JSON.stringify(savedAnswers)}
+					Previous answers: {JSON.stringify(savedAnswers, null, 2)}
 				</div>
 			</div>
 		</div>)

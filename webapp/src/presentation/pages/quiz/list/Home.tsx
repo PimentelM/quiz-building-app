@@ -57,8 +57,9 @@ function QuizListElementDisplay({quiz, onDelete}: { quiz: QuizListElement, onDel
 function ListQuizes({quizes, setQuizes} : {quizes: QuizListElement[], setQuizes: (quizes: QuizListElement[]) => void}) {
 
 	function removeQuiz(index: number){
-		quizes.splice(index,1);
-		setQuizes([...quizes])
+		let result = [...quizes]
+		result.splice(index,1);
+		setQuizes(result)
 	}
 
 	return <div className={"flex flex-wrap mt-4"}>
