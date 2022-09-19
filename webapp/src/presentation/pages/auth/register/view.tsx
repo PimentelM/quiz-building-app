@@ -15,7 +15,7 @@ function RegisterForm() {
 			onSubmit={handleSubmit}
 		>
 			<div className={"flex justify-center"}>
-				<div className="pb-4 font-medium">
+				<div className="pb-4 font-medium text-lg">
 					Register
 				</div>
 
@@ -50,6 +50,7 @@ function RegisterForm() {
 			<div className="text-center lg:text-left">
 				<button
 					type="submit"
+					style={{width: "100%"}}
 					className={"authPrimaryButton"}
 					disabled={isLoading}
 				>
@@ -58,17 +59,17 @@ function RegisterForm() {
 			</div>
 			<div className="flex flex-col items-center">
 				<Link to="/forgot-password">
-					<p className="text-sm font-semibold mt-2 pt-1 mb-0">
+					<p className="text-black text-sm font-semibold mt-2 pt-1 mb-0">
 						Forgot password?
 					</p>
 				</Link>
 				<Link to="/resend-verification">
-					<p className="text-sm font-semibold mt-2 pt-1 mb-0">
+					<p className="text-black text-sm font-semibold mt-2 pt-1 mb-0">
 						Resend verification email
 					</p>
 				</Link>
 				<Link to="/login">
-					<p className="text-sm font-semibold mt-2 pt-1 mb-0">
+					<p className="text-black text-sm font-semibold mt-2 pt-1 mb-0">
 						Already have an account?
 					</p>
 				</Link>

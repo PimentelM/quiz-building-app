@@ -13,7 +13,7 @@ function LoginForm() {
 			onSubmit={handleSubmit}
 		>
 			<div className={"flex justify-center"}>
-				<div className="pb-4 font-medium">
+				<div className="pb-4 font-medium text-lg">
 					Login
 				</div>
 
@@ -60,6 +60,7 @@ function LoginForm() {
 
 			<div className="text-center lg:text-left">
 				<button
+					style={{width: "100%"}}
 					type="submit"
 					className={"authPrimaryButton"}
 					value="Login"
@@ -71,17 +72,17 @@ function LoginForm() {
 			</div>
 			<div className="flex flex-col items-center">
 				<Link to="/forgot-password">
-					<p className="text-sm font-semibold mt-2 pt-1 mb-0">
+					<p className="text-black text-sm font-semibold mt-2 pt-1 mb-0">
 						Forgot password?
 					</p>
 				</Link>
 				<Link to="/resend-verification">
-					<p className="text-sm font-semibold mt-2 pt-1 mb-0">
+					<p className="text-black text-sm font-semibold mt-2 pt-1 mb-0">
 						Resend verification email
 					</p>
 				</Link>
 				<Link to="/register">
-					<p className="text-sm font-semibold mt-2 pt-1 mb-0">
+					<p className="text-black text-sm font-semibold mt-2 pt-1 mb-0">
 						Don't have an account?
 					</p>
 				</Link>

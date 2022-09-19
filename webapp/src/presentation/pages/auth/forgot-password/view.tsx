@@ -22,7 +22,7 @@ function ForgotPasswordForm() {
 			onSubmit={handleSubmit}
 		>
 			<div className={"flex justify-center"}>
-				<div className="pb-4 font-medium">
+				<div className="pb-4 font-medium text-lg">
 					Forgot Password
 				</div>
 
@@ -44,6 +44,7 @@ function ForgotPasswordForm() {
 
 			<div className="text-center lg:text-left">
 				<button
+					style={{width: "100%"}}
 					type="submit"
 					className={"authPrimaryButton"}
 					disabled={isLoading}

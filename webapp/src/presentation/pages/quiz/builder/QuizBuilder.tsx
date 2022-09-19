@@ -1,4 +1,4 @@
-import {usePrivatePage} from "../../hooks/usePrivatePage";
+import {usePrivatePage} from "../../../../hooks/usePrivatePage";
 
 export function QuizBuilder(){
 	usePrivatePage();

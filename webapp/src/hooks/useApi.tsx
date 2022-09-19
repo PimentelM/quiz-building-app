@@ -88,6 +88,16 @@ class Api {
 
 		return response?.data;
 	}
+
+	async getScore(_id: string, savedAnswers: Array<boolean>[]) : Promise<{ score: number }> {
+		let response = await this.http.post(`/quiz/${_id}/compute-score`, {
+			answers: savedAnswers
+		}).catch(
+			handleRequestError
+		);
+
+		return response?.data;
+	}
 }
 
 

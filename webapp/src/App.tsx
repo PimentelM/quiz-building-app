@@ -2,13 +2,13 @@ import {Outlet, ReactLocation, Router} from "@tanstack/react-location";
 // import { ReactLocationSimpleCache } from "@tanstack/react-location-simple-cache";
 import {ReactLocationDevtools} from "@tanstack/react-location-devtools";
 import MainLayout from "./presentation/layouts/MainLayout";
-import {Home} from "./presentation/pages/Home";
+import {Home} from "./presentation/pages/quiz/list/Home";
 import {
 	LoginPage
 
 } from "./presentation/pages/auth/login/view";
-import {Quiz} from "./presentation/pages/Quiz";
-import {QuizBuilder} from "./presentation/pages/QuizBuilder";
+import {QuizPage} from "./presentation/pages/quiz/player/Quiz";
+import {QuizBuilder} from "./presentation/pages/quiz/builder/QuizBuilder";
 import {ProvideAuth} from "./hooks/useAuth";
 import {ProvideApi} from "./hooks/useApi";
 import {RegisterPage} from "./presentation/pages/auth/register/view";
@@ -30,7 +30,7 @@ function App() {
 				{path: "/", element: <Home/>},
 				{path: "/login", element: <LoginPage/>},
 				{path: "/register", element: <RegisterPage/>},
-				{path: "/quiz/:quizId", element: <Quiz/>},
+				{path: "/quiz/:quizId", element: <QuizPage/>},
 				{path: "/quiz-builder", element: <QuizBuilder/>},
 				{path: "/activate-account", element: <ActivateAccountPage/>},
 				{path: "/reset-password", element: <ResetPasswordPage/>},

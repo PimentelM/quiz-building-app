@@ -1,10 +1,10 @@
 export function AuthCard({children}: { children: React.ReactNode }) {
 	return (
-		<div className="flex justify-center items-center h-[100%]">
+		<div className="flex justify-center items-center h-[100%] pt-6">
 
 			<div className="px-6 pt-8 h-full text-gray-800">
 				<div
-					className="flex xl:justify-center lg:justify-between justify-center items-center flex-wrap h-full g-6"
+					className="flex xl:justify-center lg:justify-between justify-center  flex-wrap h-full g-6"
 				>
 					<div
 						className="grow-0 shrink-1 md:shrink-0 basis-auto xl:w-6/12 lg:w-6/12 md:w-9/12 mb-12 md:mb-0"
