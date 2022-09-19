@@ -106,7 +106,7 @@ function ForgotPasswordForm() {
 		>
 			<div className={"flex justify-center"}>
 				<div className="pb-4 font-medium">
-					Send Reset Password Email
+					Forgot Password
 				</div>
 
 			</div>
