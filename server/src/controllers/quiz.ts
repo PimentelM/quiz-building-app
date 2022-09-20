@@ -1,4 +1,4 @@
-import {Controller, Delete, Get, Post} from "../utils/controllerDecorators";
+import {Controller, Delete, Get, Post} from "../router/controllerDecorators";
 import {requireAuth} from "../middlewares/authenticate";
 import {Response} from "express";
 import {getRequestContext} from "../middlewares/requestScopedContextStorage";

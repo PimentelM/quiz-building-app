@@ -1,4 +1,4 @@
-import {Controller, Post} from "../utils/controllerDecorators";
+import {Controller, Post} from "../router/controllerDecorators";
 import {AuthService} from "../services/authService";
 
 

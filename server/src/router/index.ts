@@ -1,10 +1,9 @@
 import Container from "typedi";
 import { RouteDefinition } from "./controllerDecorators";
 import express from "express";
-import controllers from "../controllers";
 import { promiseWrap } from "./expressPromiseWrap";
 
-export default (app: express.Express, BASE_PATH) => {
+export default (app: express.Express, BASE_PATH, controllers) => {
 	const controllerInstances = Object.values(controllers).map(controller =>
 		Container.get(controller as any),
 	);
