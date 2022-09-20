@@ -2,6 +2,7 @@ import axios, {AxiosError, AxiosInstance} from "axios";
 import React, {useState, useContext, createContext, useEffect, useMemo} from "react";
 import {useAuth} from "./useAuth";
 import {Quiz} from "../presentation/pages/quiz/dtos";
+import config from "../app.config.json";
 
 function handleRequestError(error: AxiosError) {
 	if (error.response) {
@@ -30,7 +31,7 @@ class Api {
 		}
 
 		this.http = axios.create({
-			baseURL: "http://localhost:8081/api",
+			baseURL: config.API_BASE_URL,
 			headers
 		})
 	}

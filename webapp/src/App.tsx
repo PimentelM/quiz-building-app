@@ -14,6 +14,7 @@ import {ActivateAccountPage} from "./presentation/pages/auth/activate-account/vi
 import {ResetPasswordPage} from "./presentation/pages/auth/reset-password/view";
 import {ForgotPasswordPage} from "./presentation/pages/auth/forgot-password/view";
 import {ResendEmailVerificationPage} from "./presentation/pages/auth/resend-activation-email/view";
+import {ErrorBoundary} from "./error-boundarie";
 
 
 // Set up a ReactLocation instance
@@ -36,12 +37,15 @@ function App() {
 				{path: "/resend-verification", element: <ResendEmailVerificationPage/>},
 				{path: "*", element: <div>Not Found</div>},
 			]}
+			defaultErrorElement={<div>Something went wrong</div>}
 		>
 			<ProvideAuth>
 				<ProvideApi>
 					<MainLayout>
-						<Outlet/> {/* Start rendering router matches */}
-						<ReactLocationDevtools/> {/* enable Devtools */}
+						<ErrorBoundary>
+							<Outlet/> {/* Start rendering router matches */}
+							<ReactLocationDevtools/> {/* enable Devtools */}
+						</ErrorBoundary>
 					</MainLayout>
 				</ProvideApi>
 			</ProvideAuth>
