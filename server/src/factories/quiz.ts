@@ -1,6 +1,6 @@
 import {PossibleAnswer, Question, Quiz} from "../models/quiz";
 import {getPermaLinkId, getUniqueId} from "../utils/uniqueIdGenerator";
-import {AppError} from "../utils/applicationErrorClasses";
+import {AppError} from "../errors";
 import {validateQuizCreationData} from "../schema-validators/createQuiz";
 
 export interface QuizCreationData {

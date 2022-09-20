@@ -1,6 +1,6 @@
 import {Injectable} from "../utils/architecturalDecorators";
 import bcrypt from "bcryptjs";
-import {InvalidInputError} from "../utils/applicationErrorClasses";
+import {InvalidInputError} from "../errors";
 import jwt from "jsonwebtoken";
 import {config} from "../config";
 import {Inject} from "typedi";

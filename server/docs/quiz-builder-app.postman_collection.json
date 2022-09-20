@@ -1,0 +1,349 @@
+{
+	"info": {
+		"_postman_id": "168cb250-6f03-4611-9e1d-83457ae8afa8",
+		"name": "quiz-builder-app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4127404"
+	},
+	"item": [
+		{
+			"name": "Create Quiz",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMjU3MzJkZDYyNGMzNTA1N2RiN2Q0OSIsImVtYWlsIjoibWF0ZXVzLnBpbWVudGVsLndAZ21haWwuY29tIiwiaWF0IjoxNjYzNzE2ODE5LCJleHAiOjE2NjM4MDMyMTl9.cLXJym5wnB9ku4fg_7yn4Wv4ygAfSDFhx1tKaMruqyE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Renaisence artists and lorem ipsulum dolor\",\n    \"questions\": [{\n        \"text\": \"What is useEffect?\",\n        \"multipleChoice\": false,\n        \"possibleAnswers\": [\n            {\n                \"text\" : \"A hook\",\n                \"isCorrect\" : true\n            },             \n            {\n                \"text\" : \"A component\",\n                \"isCorrect\" : false\n            },\n            {\n                \"text\": \"Configuration property\",\n                \"isCorrect\" : false\n            }\n        ]\n    },\n    {\n        \"text\": \"A react component can be represented in the following ways\",\n        \"multipleChoice\": true,\n        \"possibleAnswers\": [\n            {\n                \"text\" : \"A function\",\n                \"isCorrect\" : true\n            },             \n            {\n                \"text\" : \"A boolean\",\n                \"isCorrect\" : false\n            },\n                        {\n                \"text\" : \"A class\",\n                \"isCorrect\" : true\n            },             \n            {\n                \"text\" : \"A Quartenion\",\n                \"isCorrect\" : false\n            },\n            {\n                \"text\" : \"Object\",\n                \"isCorrect\": true\n            }\n        ]\n    }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/quiz",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"quiz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"mateus.pimentel.w@gmail.com\",\n    \"password\": \"123123123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/auth/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"mateus.ameaasntel.w@gmail.ci\",\n    \"password\": \"sdsadsdasdasd~\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/auth/register",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Resend account activation email",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"mateus.w@gmail.ci\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/auth/resend-activation-email",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"resend-activation-email"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Forgot password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"mateus.pimentel.w@gmail.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/auth/send-reset-password-email",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"send-reset-password-email"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"mateus.pimentel.w@gmail.com\",\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoicmVzZXRQYXNzd29yZCIsImVtYWlsIjoibWF0ZXVzLnBpbWVudGVsLndAZ21haWwuY29tIiwiaWF0IjoxNjYzNTM5NjE1LCJleHAiOjE2NjM1NDMyMTV9.wrbaXA7wSs90NWnX-c2FnR0kUQcQdQcm7ToWafB4UzQ\",\n    \"password\": \"12345678\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/auth/reset-password",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"reset-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Activate account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"mateus.pimentel.w@gmail.com\",\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWN0aXZhdGVVc2VyIiwiZW1haWwiOiJtYXRldXMuYW1lYWFzbnRlbC53QGdtYWlsLmNpIiwiaWF0IjoxNjYzNzE2Nzk3LCJleHAiOjE2NjM3MjAzOTd9.ncM431jnNNUJlcfvDD-PsjRvHtZ9mmwWgBU1xOuFtF4\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/auth/activate-account",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"activate-account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Quiz by permalink",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/quiz/by-permalink-id/mtiQry",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"quiz",
+						"by-permalink-id",
+						"mtiQry"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMjU3MzJkZDYyNGMzNTA1N2RiN2Q0OSIsImVtYWlsIjoibWF0ZXVzLnBpbWVudGVsLndAZ21haWwuY29tIiwiaWF0IjoxNjYzNzE2ODE5LCJleHAiOjE2NjM4MDMyMTl9.cLXJym5wnB9ku4fg_7yn4Wv4ygAfSDFhx1tKaMruqyE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/quiz",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"quiz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMjU3MzJkZDYyNGMzNTA1N2RiN2Q0OSIsImVtYWlsIjoibWF0ZXVzLnBpbWVudGVsLndAZ21haWwuY29tIiwiaWF0IjoxNjYzNzE2ODE5LCJleHAiOjE2NjM4MDMyMTl9.cLXJym5wnB9ku4fg_7yn4Wv4ygAfSDFhx1tKaMruqyE",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/quiz/632890b7575e350ae6e81f55",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"quiz",
+						"632890b7575e350ae6e81f55"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Compute score",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzMjU3MzJkZDYyNGMzNTA1N2RiN2Q0OSIsImVtYWlsIjoibWF0ZXVzLnBpbWVudGVsLndAZ21haWwuY29tIiwiaWF0IjoxNjYzNzE2ODE5LCJleHAiOjE2NjM4MDMyMTl9.cLXJym5wnB9ku4fg_7yn4Wv4ygAfSDFhx1tKaMruqyE",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"answers\": [\n        [true,false, false],\n        [true, false, true, false, true]\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/quiz/632a4e16fc22340d7bf467bc/compute-score",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"quiz",
+						"632a4e16fc22340d7bf467bc",
+						"compute-score"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

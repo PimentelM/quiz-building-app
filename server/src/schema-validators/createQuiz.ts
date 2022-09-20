@@ -1,5 +1,5 @@
 import joi from "joi";
-import {InvalidInputError} from "../utils/applicationErrorClasses";
+import {InvalidInputError} from "../errors";
 import {QuizCreationData} from "../factories/quiz";
 
 let possibleAnswer = joi.object({

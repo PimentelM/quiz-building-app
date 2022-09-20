@@ -1,5 +1,5 @@
 import joi from "joi";
-import {InvalidInputError} from "../utils/applicationErrorClasses";
+import {InvalidInputError} from "../errors";
 import {AnswerSignature} from "../models/quiz";
 
 

@@ -4,7 +4,7 @@ import {Response} from "express";
 import {getRequestContext} from "../middlewares/requestScopedContextStorage";
 import {QuizService} from "../services/quizService";
 import {validateAnswers} from "../schema-validators/computeScore";
-import {AppError} from "../utils/applicationErrorClasses";
+import {AppError} from "../errors";
 import {validateQuizCreationData} from "../schema-validators/createQuiz";
 
 

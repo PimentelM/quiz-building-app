@@ -1,5 +1,4 @@
-
-export class InvalidInputError extends Error {
+export class InvalidInputError extends Error implements IAppError {
 	public readonly name = "InvalidInputError";
 	public readonly __isApplicationError = true;
 	public readonly httpStatuscode: number = 400;
@@ -9,7 +8,7 @@ export class InvalidInputError extends Error {
 	}
 }
 
-export class NotFoundError extends Error {
+export class NotFoundError extends Error implements IAppError {
 	public readonly name = "NotFoundError";
 	public readonly __isApplicationError = true;
 	public readonly httpStatuscode: number = 404;
@@ -19,7 +18,7 @@ export class NotFoundError extends Error {
 	}
 }
 
-export class AppError extends Error {
+export class AppError extends Error implements IAppError {
 	public readonly name = "AppError";
 	public readonly __isApplicationError = true;
 	public readonly httpStatuscode: number = 500;
@@ -29,3 +28,7 @@ export class AppError extends Error {
 	}
 }
 
+interface IAppError {
+	__isApplicationError: true
+	httpStatuscode: number
+}

@@ -2,7 +2,7 @@ import {Injectable} from "../utils/architecturalDecorators";
 import {createQuiz, QuizCreationData} from "../factories/quiz";
 import {QuizRepository} from "../repositories/quiz";
 import {AnswerSignature, Quiz} from "../models/quiz";
-import {InvalidInputError, NotFoundError} from "../utils/applicationErrorClasses";
+import {InvalidInputError, NotFoundError} from "../errors";
 import {PublicQuiz} from "../dtos/publicQuiz";
 import {ListElementQuiz} from "../dtos/listElementQuiz";
 @Injectable()

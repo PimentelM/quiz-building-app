@@ -1,4 +1,4 @@
-import {InvalidInputError} from "../utils/applicationErrorClasses";
+import {InvalidInputError} from "../errors";
 
 export type AnswerSignature = boolean[]
 
