@@ -69,7 +69,13 @@ export function useQuizBuilderViewModel() {
 	let [page, setPage] = useState<"display" | "add_question" | "done" | undefined>(undefined);
 
 	function defineQuizTitle(title: string) {
-		setQuiz(createQuiz(title))
+		if(!quiz)
+			setQuiz(createQuiz(title))
+		else {
+			if(!title) return;
+			quiz.title = title
+			setQuiz({...quiz})
+		}
 	}
 
 	function addQuestionToQuiz(question: Question, answerSignature: boolean[]) {
@@ -101,6 +107,7 @@ export function useQuizBuilderViewModel() {
 	let [permaLinkId, setPermaLinkId] = useState<string>("");
 	let [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 	let [submitError, setSubmitError] = useState<string>("");
+	let [showEditTitle, setShowEditTitle] = useState<boolean>(false);
 
 	function submitQuiz() {
 		if (!state.readyToSubmit) throw new Error("Quiz is not ready to be submitted")
@@ -130,7 +137,9 @@ export function useQuizBuilderViewModel() {
 		submitError,
 		permaLinkId,
 		page,
-		setPage
+		setPage,
+		showEditTitle,
+		setShowEditTitle,
 	}
 
 

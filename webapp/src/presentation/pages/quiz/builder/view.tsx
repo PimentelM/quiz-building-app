@@ -1,68 +1,10 @@
 import {usePrivatePage} from "../../../../hooks/usePrivatePage";
 import { Question, Quiz} from "../dtos";
 import { Button, Input, Radio, Select} from "antd";
-import {DeleteOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EditFilled, EditOutlined} from "@ant-design/icons";
 import {Link} from "@tanstack/react-location";
 import CopyToClipboard from "react-copy-to-clipboard";
 import {addQuestionViewModel, useQuizBuilderViewModel} from "./viewModel";
-
-function QuestionDisplay({question, canDelete, deleteQuiz} : {question: Question, canDelete: boolean, deleteQuiz: () => void}) {
-	let correctAnswers = question.possibleAnswers.filter(x => x.isCorrect).map(x => x.text)
-
-	function handleDeleteClick(){
-		if(window.confirm("Are you sure you want to delete this question?")) {
-			deleteQuiz();
-		}
-	}
-
-	return <div className={"w-[240px] min-h-[120px] px-4 py-4 border flex flex-col"}>
-		<div className={"font-medium text-lg"}>
-			{question.text}
-		</div>
-		<div className={"text-gray-600"}>
-			{question.multipleChoice ? "Multiple choice" : "Single choice"}
-		</div>
-		<div>
-			{question.multipleChoice ? "Correct answers: " : "Correct answer: "}
-		</div>
-		<div className={"flex flex-col"}>
-			{correctAnswers.map((x, i) =>
-				<div key={i} style={{overflowWrap: "break-word"}} className={"text-gray-600 "}> {x}</div>
-			)}
-		</div>
-		<div className="flex-grow"></div>
-		<div className={"justify-end flex"}>
-			<div>
-				{canDelete && <DeleteOutlined onClick={handleDeleteClick} className={"cursor-pointer hover:text-red-500"}/>}
-			</div>
-		</div>
-	</div>
-}
-
-
-function Wrapper({children, quiz}: { children: any, quiz: Quiz | null }) {
-	return <div className={"w-[100%] pt-4"}>
-		<div className={"flex flex-col"}>
-			<div className={"flex justify-center"}>
-				<div className={"text-2xl"}>
-					Quiz Builder
-				</div>
-			</div>
-
-			<div>
-				<div className={"w-[80vw] m-auto"}>
-					{children}
-				</div>
-			</div>
-
-			{/*Quiz Preview*/}
-			<div className={"w-[50vw] bg-gray-50 m-auto mt-10"}>
-				<pre>{JSON.stringify(quiz, null, 2)}</pre>
-			</div>
-		</div>
-	</div>
-
-}
 
 function DefineQuizTitle({onSubmit}: { onSubmit: (title: string) => void }) {
 
@@ -200,7 +142,7 @@ function AddQuestion({onSubmit, canGoBack, goBack}: { canGoBack: boolean, goBack
 export function QuizBuilder() {
 	usePrivatePage();
 
-	let {state, quiz, defineQuizTitle, addQuestionToQuiz, deleteQuestionFromQuiz, permaLinkId, submitQuiz, page, setPage} = useQuizBuilderViewModel();
+	let {state, quiz, defineQuizTitle, addQuestionToQuiz, deleteQuestionFromQuiz, showEditTitle, setShowEditTitle, permaLinkId, submitQuiz, page, setPage} = useQuizBuilderViewModel();
 
 	console.log(`State: ${JSON.stringify(state)}`)
 
@@ -242,6 +184,13 @@ export function QuizBuilder() {
 
 
 	if (state.readyToSubmit) {
+		return <MainPage/>
+	}
+
+	return <div className={"bg-red-500"}>Error</div>
+
+
+	function MainPage() {
 		return <Wrapper quiz={quiz}>
 			<div className={"flex flex-col"}>
 				<div className={"pt-12 text-xl"}>
@@ -249,20 +198,36 @@ export function QuizBuilder() {
 				</div>
 
 				<div className="text-lg py-4">
-					Title: <span className={"italic"}>{quiz!.title}</span>
+					<div className="flex gap-2 items-center">
+						<div>
+							Title: {quiz!.title}
+						</div>
+						<div className={"pb-1"}>
+							<EditOutlined onClick={()=>setShowEditTitle(!showEditTitle)}/>
+						</div>
+					</div>
+					{showEditTitle && (
+						<div>
+							<Input
+								onBlur={(e)=>(defineQuizTitle(e.target.value))}
+								onKeyPress={(e)=>{e.key === "Enter" && defineQuizTitle(e.currentTarget.value)}}
+								placeholder={"Please define the new quiz title"}/>
+						</div>
+					)}
 				</div>
 
+
 				<div className="text-lg">
-					 Questions:
+					Questions:
 				</div>
 
 				<div className={"flex gap-2  py-4 flex-wrap"}>
 					{
 						quiz!.questions.map((question, i) => (
-						<QuestionDisplay
-							deleteQuiz={()=>deleteQuestionFromQuiz(i)}
-							canDelete={state.canDeleteQuestion}
-							question={question} key={i}/>))
+							<QuestionDisplay
+								deleteQuiz={()=>deleteQuestionFromQuiz(i)}
+								canDelete={state.canDeleteQuestion}
+								question={question} key={i}/>))
 					}
 				</div>
 
@@ -270,7 +235,7 @@ export function QuizBuilder() {
 					<Button type="primary" onClick={submitQuiz}>Submit Quiz</Button>
 					{
 						state.canAddQuestion &&
-						<Button onClick={()=> setPage("add_question")}>Add new Question</Button>
+                        <Button onClick={()=> setPage("add_question")}>Add new Question</Button>
 					}
 				</div>
 
@@ -278,7 +243,64 @@ export function QuizBuilder() {
 		</Wrapper>
 	}
 
-	return <div className={"bg-red-500"}>Error</div>
 
+}
+
+
+function QuestionDisplay({question, canDelete, deleteQuiz} : {question: Question, canDelete: boolean, deleteQuiz: () => void}) {
+	let correctAnswers = question.possibleAnswers.filter(x => x.isCorrect).map(x => x.text)
+
+	function handleDeleteClick(){
+		if(window.confirm("Are you sure you want to delete this question?")) {
+			deleteQuiz();
+		}
+	}
+
+	return <div className={"w-[240px] min-h-[120px] px-4 py-4 border flex flex-col"}>
+		<div className={"font-medium text-lg"}>
+			{question.text}
+		</div>
+		<div className={"text-gray-600"}>
+			{question.multipleChoice ? "Multiple choice" : "Single choice"}
+		</div>
+		<div>
+			{question.multipleChoice ? "Correct answers: " : "Correct answer: "}
+		</div>
+		<div className={"flex flex-col"}>
+			{correctAnswers.map((x, i) =>
+				<div key={i} style={{overflowWrap: "break-word"}} className={"text-gray-600 "}> {x}</div>
+			)}
+		</div>
+		<div className="flex-grow"></div>
+		<div className={"justify-end flex"}>
+			<div>
+				{canDelete && <DeleteOutlined onClick={handleDeleteClick} className={"cursor-pointer hover:text-red-500"}/>}
+			</div>
+		</div>
+	</div>
+}
+
+
+function Wrapper({children, quiz}: { children: any, quiz: Quiz | null }) {
+	return <div className={"w-[100%] pt-4"}>
+		<div className={"flex flex-col"}>
+			<div className={"flex justify-center"}>
+				<div className={"text-2xl"}>
+					Quiz Builder
+				</div>
+			</div>
+
+			<div>
+				<div className={"w-[80vw] m-auto"}>
+					{children}
+				</div>
+			</div>
+
+			{/*Quiz Preview*/}
+			<div className={"w-[50vw] bg-gray-50 m-auto mt-10"}>
+				<pre>{JSON.stringify(quiz, null, 2)}</pre>
+			</div>
+		</div>
+	</div>
 
 }
