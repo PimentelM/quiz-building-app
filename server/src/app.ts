@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import "reflect-metadata";
-import "./services/mailSender"
+import "./services/authMailSender"
 import express from "express";
 import { appLogger, errorLogger } from "./logger";
 import cors from "cors";

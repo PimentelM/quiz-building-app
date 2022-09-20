@@ -1,4 +1,3 @@
-import nodemailer from "nodemailer";
 
 enum NodeEnv {
     TEST = "test",

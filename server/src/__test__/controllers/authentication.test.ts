@@ -14,6 +14,8 @@ import Container from "typedi";
 import jwt from "jsonwebtoken";
 import {config} from "../../config";
 import bcrypt from "bcryptjs";
+import {IAuthMailSender} from "../../services/authService";
+import Mocked = jest.Mocked;
 
 function getValidUser(overwrites = {}) {
 	return {
@@ -41,7 +43,7 @@ function getInvalidPasswordResetToken(email: string) {
 describe("Authentication Controller", () => {
 	let app: express.Application;
 	let dbServer;
-	let mockMailService;
+	let mockMailService : Mocked<IAuthMailSender>;
 	beforeAll(async () => {
 		// Start mongodb in-memory server
 		dbServer = await MongoMemoryServer.create()
@@ -49,7 +51,7 @@ describe("Authentication Controller", () => {
 		// Connect to the in-memory database
 		await initDatabase(uri);
 
-		mockMailService = Container.get("mailSenderService");
+		mockMailService = Container.get("authMailSenderService");
 
 		app = getApp();
 	});
@@ -79,8 +81,8 @@ describe("Authentication Controller", () => {
 		expect(response.body?.message).toMatch(/.*successfully registered.*e-?mail.*activation link.*/i)
 
 		// Check that email was sent
-		expect(mockMailService.sendSimpleMail).toBeCalledTimes(1);
-		expect(mockMailService.sendSimpleMail).toBeCalledWith("test@test.com", expect.any(String), expect.stringMatching(/.*link.*http.*token.*/i));
+		expect(mockMailService.sendActivationMail).toBeCalledTimes(1);
+		expect(mockMailService.sendActivationMail).toBeCalledWith("test@test.com", expect.any(String));
 
 		// Check that user was created
 		let user = await db.User.findOne({email: "test@test.com"});
@@ -89,6 +91,38 @@ describe("Authentication Controller", () => {
 		expect(user?.password).not.toBe("12345678");
 		expect(user?.isInactive).toBe(true);
 	})
+
+	it("POST /api/auth/resend-activation-email should send an activation email containing a valid token", async () => {
+		await db.User.create(getValidUser({email: "test@test.com"}));
+
+		const response = await supertest(app)
+			.post("/api/auth/resend-activation-email")
+			.send({email: "test@test.com"});
+
+		expect(response.status).toBe(200);
+
+		// Check that token is valid
+		const token = mockMailService.sendActivationMail.mock.calls[0][1];
+		const decodedToken = jwt.verify(token, config.jwtSecret) as { type: string, email: string };
+		expect(decodedToken.type).toBe("activateUser");
+		expect(decodedToken.email).toBe("test@test.com");
+	});
+
+	it("POST /api/auth/send-reset-password-email should send a reset password email containing a valid token", async () => {
+		await db.User.create(getValidUser({email: "test@test.com"}));
+
+		const response = await supertest(app)
+			.post("/api/auth/send-reset-password-email")
+			.send({email: "test@test.com"});
+
+		expect(response.status).toBe(200);
+
+		// Check that token is valid
+		const token = mockMailService.sendPasswordResetMail.mock.calls[0][1];
+		const decodedToken = jwt.verify(token, config.jwtSecret) as { type: string, email: string };
+		expect(decodedToken.type).toBe("resetPassword");
+		expect(decodedToken.email).toBe("test@test.com");
+	});
 
 	it("POST /api/auth/login Active user should return a token after successful login", async () => {
 		await db.User.create(getValidUser());

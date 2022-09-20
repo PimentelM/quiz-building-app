@@ -4,10 +4,10 @@ import {config} from "./config";
 import {getApp} from "./app";
 import {initDatabase} from "./database";
 import Container from "typedi";
-import {MailSender} from "./services/mailSender";
+import {AuthMailSender} from "./services/authMailSender";
 
 // Init dependencies
-Container.set("mailSenderService", new MailSender());
+Container.set("authMailSenderService", new AuthMailSender());
 
 initDatabase().then(() => {
 	console.log("Starting application...")

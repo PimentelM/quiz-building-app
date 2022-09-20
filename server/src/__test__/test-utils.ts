@@ -1,10 +1,11 @@
 import Container from "typedi";
-import {ISimpleMailSender} from "../services/authService";
+import {IAuthMailSender} from "../services/authService";
 
 export function injectTestDependencies() {
-	let mockMailService : ISimpleMailSender= {
-		sendSimpleMail: jest.fn(()=>Promise.resolve())
+	let mockMailService : IAuthMailSender= {
+		sendActivationMail: jest.fn(()=>Promise.resolve()),
+		sendPasswordResetMail: jest.fn(()=>Promise.resolve())
 	}
 
-	Container.set("mailSenderService", mockMailService);
+	Container.set("authMailSenderService", mockMailService);
 }

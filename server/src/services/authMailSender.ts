@@ -1,8 +1,8 @@
-import {ISimpleMailSender} from "./authService";
+import {IAuthMailSender} from "./authService";
 import nodemailer from "nodemailer";
 import {config} from "../config";
 
-export class MailSender implements ISimpleMailSender {
+export class AuthMailSender implements IAuthMailSender {
 
 	private transporter : nodemailer.Transporter;
 
@@ -30,5 +30,20 @@ export class MailSender implements ISimpleMailSender {
 		await this.transporter.sendMail(message).then(info=>{
 			console.log(`Message sent: ${info.messageId}`)
 		})
+	}
+
+	sendActivationMail(to: string, token: string): Promise<void> {
+		return this.sendSimpleMail(
+			to,
+			"Activate your account",
+			`Please, access the following link to activate your account: ${config.frontendUrl}/activate-account?token=${token}`
+		);
+	}
+
+	sendPasswordResetMail(to: string, token: string): Promise<void> {
+		return this.sendSimpleMail(to,
+			"Reset your password",
+			`Please, access the following link to reset your password: ${config.frontendUrl}/reset-password?token=${token}`
+		);
 	}
 }
