@@ -6,8 +6,15 @@ import {Link} from "@tanstack/react-location";
 import CopyToClipboard from "react-copy-to-clipboard";
 import {addQuestionViewModel, useQuizBuilderViewModel} from "./viewModel";
 
-function QuestionDisplay({question} : {question: Question}) {
+function QuestionDisplay({question, canDelete, deleteQuiz} : {question: Question, canDelete: boolean, deleteQuiz: () => void}) {
 	let correctAnswers = question.possibleAnswers.filter(x => x.isCorrect).map(x => x.text)
+
+	function handleDeleteClick(){
+		if(window.confirm("Are you sure you want to delete this question?")) {
+			deleteQuiz();
+		}
+	}
+
 	return <div className={"w-[240px] min-h-[120px] px-4 py-4 border flex flex-col"}>
 		<div className={"font-medium text-lg"}>
 			{question.text}
@@ -22,6 +29,12 @@ function QuestionDisplay({question} : {question: Question}) {
 			{correctAnswers.map((x, i) =>
 				<div key={i} style={{overflowWrap: "break-word"}} className={"text-gray-600 "}> {x}</div>
 			)}
+		</div>
+		<div className="flex-grow"></div>
+		<div className={"justify-end flex"}>
+			<div>
+				{canDelete && <DeleteOutlined onClick={handleDeleteClick} className={"cursor-pointer hover:text-red-500"}/>}
+			</div>
 		</div>
 	</div>
 }
@@ -187,7 +200,7 @@ function AddQuestion({onSubmit, canGoBack, goBack}: { canGoBack: boolean, goBack
 export function QuizBuilder() {
 	usePrivatePage();
 
-	let {state, quiz, defineQuizTitle, addQuestionToQuiz, permaLinkId, submitQuiz, page, setPage} = useQuizBuilderViewModel();
+	let {state, quiz, defineQuizTitle, addQuestionToQuiz, deleteQuestionFromQuiz, permaLinkId, submitQuiz, page, setPage} = useQuizBuilderViewModel();
 
 	console.log(`State: ${JSON.stringify(state)}`)
 
@@ -246,7 +259,10 @@ export function QuizBuilder() {
 				<div className={"flex gap-2  py-4 flex-wrap"}>
 					{
 						quiz!.questions.map((question, i) => (
-						<QuestionDisplay question={question} key={i}/>))
+						<QuestionDisplay
+							deleteQuiz={()=>deleteQuestionFromQuiz(i)}
+							canDelete={state.canDeleteQuestion}
+							question={question} key={i}/>))
 					}
 				</div>
 

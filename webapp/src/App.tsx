@@ -14,7 +14,7 @@ import {ActivateAccountPage} from "./presentation/pages/auth/activate-account/vi
 import {ResetPasswordPage} from "./presentation/pages/auth/reset-password/view";
 import {ForgotPasswordPage} from "./presentation/pages/auth/forgot-password/view";
 import {ResendEmailVerificationPage} from "./presentation/pages/auth/resend-activation-email/view";
-import {ErrorBoundary} from "./error-boundarie";
+import {ErrorBoundary} from "./presentation/pages/errorBoundarie";
 
 
 // Set up a ReactLocation instance

@@ -45,6 +45,17 @@ export function useQuizBuilderViewModel() {
 		}
 	}
 
+	function canDeleteQuestion(quiz: Quiz): boolean {
+		return quiz.questions.length > 1
+	}
+
+	function deleteQuestion(quiz: Quiz, questionIndex: number): Quiz {
+		quiz.questions.splice(questionIndex, 1)
+		return {
+			...quiz,
+		}
+	}
+
 	function createQuiz(title: string): Quiz {
 		return {
 			title,
@@ -69,12 +80,19 @@ export function useQuizBuilderViewModel() {
 		setPage("display")
 	}
 
+	function deleteQuestionFromQuiz(questionIndex: number) {
+		if (quiz === null) throw new Error("Quiz is null")
+
+		setQuiz(deleteQuestion(quiz, questionIndex))
+	}
+
 	let state = {
 		page,
 		requireAddTitle: quiz === null,
 		requireAddQuestion: quiz?.questions.length === 0,
 		readyToSubmit: quiz !== null && isQuizValid(quiz),
 		canAddQuestion: quiz !== null && canAddQuestion(quiz),
+		canDeleteQuestion: quiz !== null && canDeleteQuestion(quiz),
 	}
 
 	//
@@ -106,6 +124,7 @@ export function useQuizBuilderViewModel() {
 		quiz,
 		defineQuizTitle,
 		addQuestionToQuiz,
+		deleteQuestionFromQuiz,
 		submitQuiz,
 		isSubmitting,
 		submitError,
