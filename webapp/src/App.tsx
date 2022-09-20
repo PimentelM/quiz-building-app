@@ -7,7 +7,7 @@ import {
 	LoginPage
 
 } from "./presentation/pages/auth/login/view";
-import {QuizPage} from "./presentation/pages/quiz/player/Quiz";
+import {QuizPage} from "./presentation/pages/quiz/player/view";
 import {QuizBuilder} from "./presentation/pages/quiz/builder/QuizBuilder";
 import {ProvideAuth} from "./hooks/useAuth";
 import {ProvideApi} from "./hooks/useApi";
