@@ -23,6 +23,9 @@ export class Question {
 		this.text = text
 		this.possibleAnswers = possibleAnswers
 
+		if(this.possibleAnswers.length > 5)
+			throw new InvalidInputError("A question can have at most 5 possible answers")
+
 		if(this.text.length < 1 || this.text.length > 1024) {
 			throw new InvalidInputError("Question text must be between 1 and 1024 characters long")
 		}
@@ -81,6 +84,10 @@ export class Quiz {
 
 		if (this.questions.length > 10) {
 			throw new InvalidInputError("Quiz cannot have more than 10 questions")
+		}
+
+		if(this.questions.length < 1) {
+			throw new InvalidInputError("Quiz must have at least 1 question")
 		}
 	}
 

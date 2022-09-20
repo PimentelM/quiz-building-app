@@ -184,6 +184,30 @@ describe("Quiz Controller", () => {
 			score: 2
 		});
 	});
+
+	describe("Security", () => {
+
+		it("Should not be possible to create a quiz if you are not logged in", async () => {
+			const response = await supertest(app)
+				.post("/api/quiz")
+				.send(getValidQuizCreationData());
+			expect(response.status).toBe(401);
+		});
+
+		it("Should not delete a quiz owned by another user", async () => {
+			let quizCreationData = getValidQuizCreationData({ownerId: "123", permaLinkId: "123456"})
+			const quiz = await db.Quiz.create(quizCreationData);
+
+			const response = await supertest(app)
+				.delete(`/api/quiz/${quiz._id}`)
+				.set({
+					...headers,
+					Authorization: getValidAuthToken("456")
+				});
+
+			expect(response.status.toString()).toMatch(/(401)|(403)|(400)|(404)/);
+		});
+	})
 	
 
 });

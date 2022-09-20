@@ -151,8 +151,21 @@ describe("Authentication Controller", () => {
 
 	});
 
-	let invalidTokens = [getPasswordResetToken("another@email.com"), getInvalidPasswordResetToken("test@test.com")];
-	it.each(invalidTokens)("POST /api/auth/reset-password should not change user password if token is invalid", async (token) => {
+	it("POST /api/auth/reset-password should not change user password if email @ token does'nt match", async () => {
+		let token = getPasswordResetToken("another@email.com")
+		let beforeUser = await db.User.create(getValidUser());
+		const response = await supertest(app).post("/api/auth/reset-password").send({token, password: "newPassword"});
+
+		expect(response.status).toBe(400);
+
+		// Check if user password was changed
+		let afterUser = await db.User.findOne({email: "test@test.com"});
+		expect(afterUser?.password).toBe(beforeUser?.password);
+	});
+
+	it("POST /api/auth/reset-password should not change user password if token is signed with different secret", async () => {
+		let token = getInvalidPasswordResetToken("test@test.com");
+
 		let beforeUser = await db.User.create(getValidUser());
 		const response = await supertest(app).post("/api/auth/reset-password").send({token, password: "newPassword"});
 
