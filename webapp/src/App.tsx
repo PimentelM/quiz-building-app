@@ -1,14 +1,12 @@
 import {Outlet, ReactLocation, Router} from "@tanstack/react-location";
-// import { ReactLocationSimpleCache } from "@tanstack/react-location-simple-cache";
 import {ReactLocationDevtools} from "@tanstack/react-location-devtools";
 import MainLayout from "./presentation/layouts/MainLayout";
 import {Home} from "./presentation/pages/quiz/list/view";
 import {
 	LoginPage
-
 } from "./presentation/pages/auth/login/view";
 import {QuizPage} from "./presentation/pages/quiz/player/view";
-import {QuizBuilder} from "./presentation/pages/quiz/builder/QuizBuilder";
+import {QuizBuilder} from "./presentation/pages/quiz/builder/view";
 import {ProvideAuth} from "./hooks/useAuth";
 import {ProvideApi} from "./hooks/useApi";
 import {RegisterPage} from "./presentation/pages/auth/register/view";
