@@ -1,11 +1,12 @@
 import {Injectable} from "../utils/architecturalDecorators";
 import bcrypt from "bcryptjs";
-import {db} from "../database";
 import {InvalidInputError} from "../utils/applicationErrorClasses";
 import jwt from "jsonwebtoken";
 import {config} from "../config";
 import {Inject} from "typedi";
 import {timeout} from "../utils/javascriptUtils";
+import {getUniqueId} from "../utils/uniqueIdGenerator";
+import {UserRepository} from "../repositories/user";
 
 let emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
@@ -17,14 +18,15 @@ export interface ISimpleMailSender {
 @Injectable()
 export class AuthService {
 
-	constructor(@Inject("mailSenderService") private mailSenderService: ISimpleMailSender) {
+	constructor(private userRepository : UserRepository,
+		@Inject("mailSenderService") private mailSenderService: ISimpleMailSender) {
 	}
 
 
 	public async login(email: string, password: string) {
 		email = email.toLowerCase();
 
-		let user = await db.User.findOne({email});
+		let user = await this.userRepository.findByEmail(email)
 
 		if(!user) {
 			throw new InvalidInputError("Email or password is incorrect");
@@ -57,7 +59,7 @@ export class AuthService {
 
 		email = email.toLowerCase();
 
-		let emailAlreadyInUse = await db.User.findOne({email});
+		let emailAlreadyInUse = await this.userRepository.findByEmail(email);
 
 		if(emailAlreadyInUse) {
 			throw new InvalidInputError("Email already in use.");
@@ -69,7 +71,8 @@ export class AuthService {
 
 		let hashedPassword = bcrypt.hashSync(password, 10);
 
-		let user = await db.User.create({
+		let user = await this.userRepository.save({
+			_id: getUniqueId(),
 			email, password: hashedPassword, isInactive: true
 		});
 
@@ -91,7 +94,7 @@ export class AuthService {
 		}
 		email = email.toLowerCase();
 
-		let user = await db.User.findOne({email});
+		let user = await this.userRepository.findByEmail(email);
 		if(!user) {
 			throw new InvalidInputError("Email not found");
 		}
@@ -123,13 +126,13 @@ export class AuthService {
 			throw new InvalidInputError("Invalid token");
 		}
 
-		let user = await db.User.findOne({email: decodedToken.email});
+		let user = await this.userRepository.findByEmail(decodedToken.email);
 
 		if(!user) {
 			throw new InvalidInputError("Invalid token");
 		}
 
-		await db.User.updateOne({_id: user._id}, {isInactive: false});
+		await this.userRepository.activateAccount(user.email);
 	}
 
 	async sendResetPasswordEmail(email: string) {
@@ -138,7 +141,7 @@ export class AuthService {
 		}
 		email = email.toLowerCase();
 
-		let user = await db.User.findOne({email});
+		let user = await this.userRepository.findByEmail(email);
 		if(!user) {
 			throw new InvalidInputError("Email not found");
 		}
@@ -171,7 +174,7 @@ export class AuthService {
 			throw new InvalidInputError("Invalid token");
 		}
 
-		let user = await db.User.findOne({email: decodedToken.email});
+		let user = await this.userRepository.findByEmail(decodedToken.email);
 
 		if(!user) {
 			throw new InvalidInputError("Invalid token");
@@ -183,7 +186,7 @@ export class AuthService {
 
 		let hashedPassword = bcrypt.hashSync(password, 10);
 
-		await db.User.updateOne({_id: user._id}, {password: hashedPassword});
+		await this.userRepository.updatePassword(user.email, hashedPassword);
 	}
 
 	async changePassword(email: string, oldPassword: string, newPassword: string) {
@@ -193,7 +196,7 @@ export class AuthService {
 
 		email = email.toLowerCase();
 
-		let user = await db.User.findOne({email});
+		let user = await this.userRepository.findByEmail(email);
 
 		if(!user) {
 			throw new InvalidInputError("Email or password is incorrect");
@@ -209,7 +212,7 @@ export class AuthService {
 
 		let hashedPassword = bcrypt.hashSync(newPassword, 10);
 
-		await db.User.updateOne({_id: user._id}, {password: hashedPassword});
+		await this.userRepository.updatePassword(user.email, hashedPassword);
 
 	}
 }
