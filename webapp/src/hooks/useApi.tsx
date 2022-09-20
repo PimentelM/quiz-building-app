@@ -126,26 +126,24 @@ class Api {
 
 }
 
-
-
 interface ApiContextProps {
 	api: Api;
 }
 
 const apiContext = createContext<ApiContextProps>({} as ApiContextProps);
-// Provider component that wraps your app and makes auth object ...
-// ... available to any child component that calls useAuth().
+// Provider component that wraps your app and makes api service...
+// ... available to any child component that calls useApi().
 export function ProvideApi({ children } : any) {
 	const api = useProvideApi();
 	return <apiContext.Provider value={api}>{children}</apiContext.Provider>;
 }
-// Hook for child components to get the auth object ...
+// Hook for child components to get the api service ...
 // ... and re-render when it changes.
 export const useApi = () => {
 	return useContext(apiContext);
 };
 
-// Provider hook that creates auth object and handles state
+// Provider hook that creates api service
 function useProvideApi() {
 	const {token} = useAuth()
 

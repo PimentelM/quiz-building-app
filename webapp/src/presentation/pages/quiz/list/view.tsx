@@ -1,37 +1,11 @@
 import {usePrivatePage} from "../../../../hooks/usePrivatePage";
-import {Card, Grid, Row} from "antd";
 import {QuizListElement} from "../dtos";
-import {useApi} from "../../../../hooks/useApi";
-import {useEffect, useState} from "react";
-import {useNavigate} from "@tanstack/react-location";
-import config from "tailwindcss/defaultConfig";
+import {useQuizListElementViewModel, useQuizListViewModel} from "./viewModel";
 
 
 function QuizListElementDisplay({quiz, onDelete}: { quiz: QuizListElement, onDelete?: () => void }) {
-	let navigate = useNavigate()
-	let {api} = useApi()
 
-	let [isDeleting, setIsDeleting] = useState(false)
-
-	function deleteQuiz(){
-		if(isDeleting) return;
-
-		let doDelete = confirm("Are you sure you want to delete this quiz? This action cannot be undone.")
-		if(!doDelete) return;
-
-		api.deleteQuiz(quiz._id!).then(()=>{
-			console.log("Deleted quiz")
-			onDelete?.()
-		}).catch((error)=>{
-			alert(error.message)
-		}).finally(()=>{
-			setIsDeleting(false)
-		})
-	}
-
-	function visitQuiz(){
-		navigate({to:`/quiz/${quiz.permaLinkId}`})
-	}
+	let {visitQuiz, deleteQuiz} = useQuizListElementViewModel(quiz, onDelete);
 
 	return <div className={"w-[240px] min-h-[120px] mx-2 my-4 px-4 py-4 border flex flex-col"}>
 		<div className={"font-medium text-lg"}>
@@ -66,31 +40,6 @@ function ListQuizes({quizes, setQuizes} : {quizes: QuizListElement[], setQuizes:
 			{quizes.map((quiz,i) => <QuizListElementDisplay onDelete={()=> removeQuiz(i)} key={quiz._id} quiz={quiz}/>)}
 	</div>
 
-
-}
-function useQuizListViewModel() {
-	let {api} = useApi()
-	let [quizes, setQuizes] = useState<QuizListElement[]>([])
-	let [isLoading, setIsLoading] = useState(true)
-	let [error, setError] = useState<string>()
-
-	useEffect(() => {
-		setIsLoading(true)
-		api.listQuizes().then((quizes) => {
-			setQuizes(quizes)
-		}).catch((error) => {
-			setError(error)
-		}).finally(()=>{
-			setIsLoading(false)
-		})
-	},[])
-
-	return {
-		quizes,
-		isLoading,
-		error,
-		setQuizes
-	}
 
 }
 

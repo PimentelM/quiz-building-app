@@ -2,7 +2,7 @@ import {Outlet, ReactLocation, Router} from "@tanstack/react-location";
 // import { ReactLocationSimpleCache } from "@tanstack/react-location-simple-cache";
 import {ReactLocationDevtools} from "@tanstack/react-location-devtools";
 import MainLayout from "./presentation/layouts/MainLayout";
-import {Home} from "./presentation/pages/quiz/list/Home";
+import {Home} from "./presentation/pages/quiz/list/view";
 import {
 	LoginPage
 
