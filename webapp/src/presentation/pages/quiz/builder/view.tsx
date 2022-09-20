@@ -132,7 +132,7 @@ function AddQuestion({onSubmit, canGoBack, goBack}: { canGoBack: boolean, goBack
 						<Button onClick={goBack}>Cancel</Button>
 					)}
 
-				<AddQuestionDebugInfo/>
+				{/*<AddQuestionDebugInfo/>*/}
 
 			</div>
 		</form>
@@ -297,9 +297,9 @@ function Wrapper({children, quiz}: { children: any, quiz: Quiz | null }) {
 			</div>
 
 			{/*Quiz Preview*/}
-			<div className={"w-[50vw] bg-gray-50 m-auto mt-10"}>
-				<pre>{JSON.stringify(quiz, null, 2)}</pre>
-			</div>
+			{/*<div className={"w-[50vw] bg-gray-50 m-auto mt-10"}>*/}
+			{/*	<pre>{JSON.stringify(quiz, null, 2)}</pre>*/}
+			{/*</div>*/}
 		</div>
 	</div>
 
