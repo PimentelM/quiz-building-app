@@ -1,0 +1,11 @@
+extends _base
+block content
+  h3 You just created a new account!
+  p Please click the button below to activate your account.
+
+  h4 If you can not click on the button, please copy and paste the link manually into the browser bar:
+
+  p #{url}
+
+  center.call-action
+    a.mui-btn.mui-btn--raised.mui-btn--primary(href=url, target="_blank") Activate Account

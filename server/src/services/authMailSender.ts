@@ -1,6 +1,7 @@
 import {IAuthMailSender} from "./authService";
 import nodemailer from "nodemailer";
 import {config} from "../config";
+import * as pug from "pug";
 
 export class AuthMailSender implements IAuthMailSender {
 
@@ -32,18 +33,28 @@ export class AuthMailSender implements IAuthMailSender {
 		})
 	}
 
-	sendActivationMail(to: string, token: string): Promise<void> {
+	async sendActivationMail(to: string, token: string): Promise<void> {
+		let url = `${config.frontendUrl}/activate-account?token=${token}`
+
+		let html = pug.renderFile("src/assets/mail/activate-account.pug", {url});
+
 		return this.sendSimpleMail(
 			to,
 			"Activate your account",
-			`Please, access the following link to activate your account: ${config.frontendUrl}/activate-account?token=${token}`
+			`Please, access the following link to activate your account: ${url}`,
+			html
 		);
 	}
 
 	sendPasswordResetMail(to: string, token: string): Promise<void> {
+		let url = `${config.frontendUrl}/reset-password?token=${token}`
+
+		let html = pug.renderFile("src/assets/mail/reset-password.pug", {url});
+
 		return this.sendSimpleMail(to,
 			"Reset your password",
-			`Please, access the following link to reset your password: ${config.frontendUrl}/reset-password?token=${token}`
+			`Please, access the following link to reset your password: ${url}`,
+			html
 		);
 	}
 }
