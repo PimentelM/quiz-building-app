@@ -1,7 +1,7 @@
 import {Outlet, ReactLocation, Router} from "@tanstack/react-location";
 import {ReactLocationDevtools} from "@tanstack/react-location-devtools";
 import MainLayout from "./presentation/layouts/MainLayout";
-import {Home} from "./presentation/pages/quiz/list/view";
+import {ListQuizesPage} from "./presentation/pages/quiz/list/view";
 import {
 	LoginPage
 } from "./presentation/pages/auth/login/view";
@@ -15,6 +15,7 @@ import {ResetPasswordPage} from "./presentation/pages/auth/reset-password/view";
 import {ForgotPasswordPage} from "./presentation/pages/auth/forgot-password/view";
 import {ResendEmailVerificationPage} from "./presentation/pages/auth/resend-activation-email/view";
 import {ErrorBoundary} from "./presentation/pages/errorBoundarie";
+import {Home} from "./presentation/pages/Home";
 
 
 // Set up a ReactLocation instance
@@ -44,7 +45,6 @@ function App() {
 					<MainLayout>
 						<ErrorBoundary>
 							<Outlet/> {/* Start rendering router matches */}
-							<ReactLocationDevtools/> {/* enable Devtools */}
 						</ErrorBoundary>
 					</MainLayout>
 				</ProvideApi>

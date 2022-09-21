@@ -43,7 +43,7 @@ function ListQuizes({quizes, setQuizes} : {quizes: QuizListElement[], setQuizes:
 
 }
 
-export function Home(){
+export function ListQuizesPage(){
 	usePrivatePage();
 
 	let {quizes, isLoading, error, setQuizes} = useQuizListViewModel();
